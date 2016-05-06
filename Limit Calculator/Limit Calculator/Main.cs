@@ -78,14 +78,12 @@ namespace Limit_Calculator
             }
         }
 
-        private void add_Click(object sender, EventArgs e)
+        private void addToPreference_Click(object sender, EventArgs e)
         {
             AFTreeNode node = (AFTreeNode)afTreeView.SelectedNode;
             string path = node.AFPath;
             string query = queryTextBox.Text;
             CalculationPreference preference = new CalculationPreference(path, query);
-
-
             foreach (AFAttributeTrait limit in AFAttributeTrait.AllLimits)
             {
                 ComboBox comboBox = (ComboBox)panel1.Controls[limit.Name];
@@ -101,13 +99,12 @@ namespace Limit_Calculator
 
         private void save()
         {
-
             string output = JsonConvert.SerializeObject(calculations, Formatting.Indented);
             string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             File.WriteAllText(homedirectory + @"\\" + "LimitCalculatorSetting.json", output);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void displaySearch_Click(object sender, EventArgs e)
         {
             EventFrameSearch h = new EventFrameSearch(this, db);
             h.Show();

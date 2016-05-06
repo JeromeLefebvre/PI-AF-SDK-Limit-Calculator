@@ -34,13 +34,13 @@
             this.queryTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.afTreeView = new OSIsoft.AF.UI.AFTreeView();
-            this.add = new System.Windows.Forms.Button();
+            this.addToPreference = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.calculationPreferenceBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.button1 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).BeginInit();
+            this.displaySearch = new System.Windows.Forms.Button();
+            this.calculationPreferenceBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // piSystemPicker
@@ -91,7 +91,7 @@
             this.queryTextBox.Location = new System.Drawing.Point(403, 32);
             this.queryTextBox.Multiline = true;
             this.queryTextBox.Name = "queryTextBox";
-            this.queryTextBox.Size = new System.Drawing.Size(420, 50);
+            this.queryTextBox.Size = new System.Drawing.Size(379, 50);
             this.queryTextBox.TabIndex = 2;
             // 
             // label1
@@ -110,52 +110,52 @@
             this.afTreeView.Name = "afTreeView";
             this.afTreeView.ShowAttributes = true;
             this.afTreeView.ShowNodeToolTips = true;
-            this.afTreeView.Size = new System.Drawing.Size(372, 289);
+            this.afTreeView.Size = new System.Drawing.Size(372, 267);
             this.afTreeView.TabIndex = 6;
             // 
-            // add
+            // addToPreference
             // 
-            this.add.Location = new System.Drawing.Point(403, 337);
-            this.add.Name = "add";
-            this.add.Size = new System.Drawing.Size(75, 23);
-            this.add.TabIndex = 7;
-            this.add.Text = "Add Calculation";
-            this.add.UseVisualStyleBackColor = true;
-            this.add.Click += new System.EventHandler(this.add_Click);
+            this.addToPreference.Location = new System.Drawing.Point(403, 316);
+            this.addToPreference.Name = "addToPreference";
+            this.addToPreference.Size = new System.Drawing.Size(104, 23);
+            this.addToPreference.TabIndex = 7;
+            this.addToPreference.Text = "Save Calculation";
+            this.addToPreference.UseVisualStyleBackColor = true;
+            this.addToPreference.Click += new System.EventHandler(this.addToPreference_Click);
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(403, 145);
+            this.panel1.Location = new System.Drawing.Point(403, 124);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(282, 175);
             this.panel1.TabIndex = 25;
-            // 
-            // calculationPreferenceBindingSource
-            // 
-            this.calculationPreferenceBindingSource.DataSource = typeof(Limit_Calculator.CalculationPreference);
             // 
             // eventLog1
             // 
             this.eventLog1.SynchronizingObject = this;
             // 
-            // button1
+            // displaySearch
             // 
-            this.button1.Location = new System.Drawing.Point(403, 88);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 27;
-            this.button1.Text = "Search";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.displaySearch.Location = new System.Drawing.Point(403, 88);
+            this.displaySearch.Name = "displaySearch";
+            this.displaySearch.Size = new System.Drawing.Size(75, 23);
+            this.displaySearch.TabIndex = 27;
+            this.displaySearch.Text = "Search";
+            this.displaySearch.UseVisualStyleBackColor = true;
+            this.displaySearch.Click += new System.EventHandler(this.displaySearch_Click);
+            // 
+            // calculationPreferenceBindingSource
+            // 
+            this.calculationPreferenceBindingSource.DataSource = typeof(Limit_Calculator.CalculationPreference);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(843, 392);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(800, 362);
+            this.Controls.Add(this.displaySearch);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.add);
+            this.Controls.Add(this.addToPreference);
             this.Controls.Add(this.afTreeView);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.queryTextBox);
@@ -165,8 +165,8 @@
             this.Name = "Main";
             this.Text = "Limit Calculator";
             this.Load += new System.EventHandler(this.Main_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -179,11 +179,11 @@
         private System.Windows.Forms.TextBox queryTextBox;
         private System.Windows.Forms.Label label1;
         private OSIsoft.AF.UI.AFTreeView afTreeView;
-        private System.Windows.Forms.Button add;
+        private System.Windows.Forms.Button addToPreference;
         private System.Windows.Forms.BindingSource calculationPreferenceBindingSource;
         private System.Windows.Forms.Panel panel1;
         private System.Diagnostics.EventLog eventLog1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button displaySearch;
     }
 }
 
