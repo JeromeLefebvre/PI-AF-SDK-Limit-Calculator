@@ -104,14 +104,27 @@ namespace Limit_Calculator
             EventFrameSearch h = new EventFrameSearch(this, db);
 
             OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage search = (OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage)h.Controls["eventFrameSearchPage"];
+            AFEventFrameCriteria criteria = search.EventFrameCriteria;
 
             OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", queryTextBox.Text);
-            OSIsoft.AF.Search.AFSearchToken startTime = new OSIsoft.AF.Search.AFSearchToken();
 
-            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, out startTime);
+            OSIsoft.AF.Search.AFSearchToken token = new OSIsoft.AF.Search.AFSearchToken();
+            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, out token);
+            if (token.Value != null)
+                criteria.StartTime = token.Value;
+            query.Tokens.Remove(token);
 
-            AFEventFrameCriteria criteria = search.EventFrameCriteria;
-            criteria.StartTime = startTime.Value;
+            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.End, out token);
+            if (token.Value != null)
+                criteria.EndTime = token.Value;
+            query.Tokens.Remove(token);
+
+            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.InProgress, out token);
+            if (token.Value != null)
+                criteria.InProgress = token.Value == "true" ? true : false;
+            query.Tokens.Remove(token);
+
+            criteria.LastFullSearchString = query.ToString();
             search.EventFrameCriteria = criteria;
 
             h.Show();
