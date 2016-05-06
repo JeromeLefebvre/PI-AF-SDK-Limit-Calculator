@@ -38,17 +38,5 @@ namespace Limit_Calculator
         {
             this.eventFrameSearchPage.Dock = DockStyle.Fill;
         }
-
-        private void eventFrameSearchPage_Enter(object sender, EventArgs e)
-        {
-            AFEventFrameCriteria criteria = eventFrameSearchPage.EventFrameCriteria;
-            OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", main.Controls["queryTextBox"].Text);
-            OSIsoft.AF.Search.AFSearchToken startTime = new OSIsoft.AF.Search.AFSearchToken();
-
-            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, out startTime);
-
-            criteria.StartTime = startTime.Value;
-            eventFrameSearchPage.EventFrameCriteria = criteria;
-        }
     }
 }

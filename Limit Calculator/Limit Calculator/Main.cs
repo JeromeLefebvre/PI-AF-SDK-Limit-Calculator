@@ -63,7 +63,7 @@ namespace Limit_Calculator
 
         private void Main_Load(object sender, EventArgs e)
         {
-            queryTextBox.Text = @"Start:>*-10h Inprogress:=False Template:=""Batch""";
+            queryTextBox.Text = @"Start:>*-10h End:<*-1h Inprogress:=False";
         }
 
         private void afDatabasePicker_SelectionChange(object sender, OSIsoft.AF.UI.SelectionChangeEventArgs e)
@@ -102,6 +102,18 @@ namespace Limit_Calculator
         private void displaySearch_Click(object sender, EventArgs e)
         {
             EventFrameSearch h = new EventFrameSearch(this, db);
+
+            OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage search = (OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage)h.Controls["eventFrameSearchPage"];
+
+            OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", queryTextBox.Text);
+            OSIsoft.AF.Search.AFSearchToken startTime = new OSIsoft.AF.Search.AFSearchToken();
+
+            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, out startTime);
+
+            AFEventFrameCriteria criteria = search.EventFrameCriteria;
+            criteria.StartTime = startTime.Value;
+            search.EventFrameCriteria = criteria;
+
             h.Show();
         }
     }
