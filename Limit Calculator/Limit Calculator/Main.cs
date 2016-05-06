@@ -41,10 +41,6 @@ namespace Limit_Calculator
                 // Need to add in a way to properly deserlialize the object or at least, manually append it.
                 //calculations = JsonConvert.DeserializeObject<List<CalculationPreference>>(preferenceText);
             }
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = calculations;
-            //afAttributeTraitsPage1.A
-            //bindingSource.DataSource = possibleOperations;
 
             ICollection<AFAttributeTrait>  limits = AFAttributeTrait.AllLimits;
 
@@ -66,51 +62,11 @@ namespace Limit_Calculator
                 panel1.Controls.Add(limitCombo);
                 vertical += limitLabel.Height - 1;
             }
-            //comboBox1.ValueMember = "Name";
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
             queryTextBox.Text = @"Start:>*-10h Inprogress:=False Template:=""Batch""";
-        }
-
-        private void findEventFrames(object sender, EventArgs e)
-        {
-            eventframeGridView.Rows.Clear();
-            db = afDatabasePicker.AFDatabase;
-            //string queryString = @"Start:>*-10m Inprogress:=True Template:=""Batch"" ""|Golden"":=True  ";
-            //string queryString = @"Start:>*-10h Inprogress:=False Template:=""Batch""";
-            try
-            {
-                /*
-                AFEventFrameCriteria criteria = eventFrameSearchPage1.EventFrameCriteria;
-                OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", eventFrameSearchPage1.EventFrameCriteria.LastFullSearchString);
-                OSIsoft.AF.Search.AFSearchToken startTime = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, OSIsoft.AF.Search.AFSearchOperator.GreaterThanOrEqual, criteria.StartTime);
-                OSIsoft.AF.Search.AFSearchToken endTime = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.End, OSIsoft.AF.Search.AFSearchOperator.LessThanOrEqual, criteria.EndTime);
-                OSIsoft.AF.Search.AFSearchToken inProgess = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.InProgress, OSIsoft.AF.Search.AFSearchOperator.Equal, criteria.InProgress.ToString());
-
-                query.Tokens.Add(startTime);
-                query.Tokens.Add(endTime);
-                query.Tokens.Add(inProgess);
-
-                queryTextBox.Text = eventFrameSearchPage1.EventFrameCriteria.LastFullSearchString;
-                IEnumerable<AFEventFrame> found = query.FindEventFrames();
-                foreach (AFEventFrame f in found)
-                {
-                    DataGridViewRow row = new DataGridViewRow();
-                    row.CreateCells(eventframeGridView);
-                    row.Cells[0].Value = f.Name;
-                    row.Cells[1].Value = f.Template.Name;
-                    row.Cells[2].Value = f.TimeRange.StartTime.LocalTime;
-                    row.Cells[3].Value = f.TimeRange.EndTime.LocalTime;
-                    eventframeGridView.Rows.Add(row);
-                }
-                */
-            }
-            catch (System.FormatException exception)
-            {
-                MessageBox.Show(exception.Message);
-            }
         }
 
         private void afDatabasePicker_SelectionChange(object sender, OSIsoft.AF.UI.SelectionChangeEventArgs e)
@@ -140,8 +96,6 @@ namespace Limit_Calculator
             }
 
             calculations.Add(preference);
-            dataGridView1.DataSource = null;
-            dataGridView1.DataSource = calculations;
             save();
         }
 
@@ -151,27 +105,6 @@ namespace Limit_Calculator
             string output = JsonConvert.SerializeObject(calculations, Formatting.Indented);
             string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             File.WriteAllText(homedirectory + @"\\" + "LimitCalculatorSetting.json", output);
-        }
-
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void button1_Click(object sender, EventArgs e)

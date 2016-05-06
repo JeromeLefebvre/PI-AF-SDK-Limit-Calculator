@@ -4,10 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Limit_Calculator
@@ -35,20 +31,24 @@ namespace Limit_Calculator
             query.Tokens.Add(startTime);
             query.Tokens.Add(endTime);
             query.Tokens.Add(inProgess);
-
-            //queryTextBox.Text = eventFrameSearchPage.EventFrameCriteria.LastFullSearchString;
-
             main.Controls["queryTextBox"].Text = query.ToString();
-        }
-
-        private void eventFrameSearchPage_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void EventFrameSearch_Load(object sender, EventArgs e)
         {
             this.eventFrameSearchPage.Dock = DockStyle.Fill;
+        }
+
+        private void eventFrameSearchPage_Enter(object sender, EventArgs e)
+        {
+            AFEventFrameCriteria criteria = eventFrameSearchPage.EventFrameCriteria;
+            OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", main.Controls["queryTextBox"].Text);
+            OSIsoft.AF.Search.AFSearchToken startTime = new OSIsoft.AF.Search.AFSearchToken();
+
+            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, out startTime);
+
+            criteria.StartTime = startTime.Value;
+            eventFrameSearchPage.EventFrameCriteria = criteria;
         }
     }
 }
