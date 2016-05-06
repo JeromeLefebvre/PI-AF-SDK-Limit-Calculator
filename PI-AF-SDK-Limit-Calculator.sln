@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Limit Calculator", "Limit C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LimitCalculatorSDK", "LimitCalculatorSDK\LimitCalculatorSDK\LimitCalculatorSDK.csproj", "{502555DE-FC5A-4505-B37C-ED7CA523E82D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFrameAnalysis", "AnalysesOfEventFrames\EventFrameAnalysis\EventFrameAnalysis.csproj", "{B9984E48-74EE-49B9-B86F-35BF67D42C11}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFrameAnalysis", "PI-AF-SDK-AnalysesOfEventFrames\EventFrameAnalysis\EventFrameAnalysis.csproj", "{B9984E48-74EE-49B9-B86F-35BF67D42C11}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
