@@ -5,11 +5,8 @@ using OSIsoft.AF.EventFrame;
 using OSIsoft.AF.PI;
 using OSIsoft.AF.Search;
 using OSIsoft.AF.Time;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LimitCalculatorSDK
 {
@@ -23,10 +20,8 @@ namespace LimitCalculatorSDK
         private readonly AFEventFrameSearch eventFrameQuery;
         private readonly AFEventFrameSearch timeLessQuery;
         private readonly AFAttribute sensor;
-        //private List<AFValues> bounds = new List<AFValues> { new AFValues(), new AFValues() };
         private Dictionary<AFAttributeTrait, AFValues> bounds = new Dictionary<AFAttributeTrait, AFValues> { };
 
-        //private List<AFAttribute> boundAttributes;
         private Dictionary<AFAttributeTrait, AFAttribute> boundAttributes = new Dictionary<AFAttributeTrait, AFAttribute> { };
 
         CalculationPreference preference;
@@ -87,7 +82,6 @@ namespace LimitCalculatorSDK
                 case "minimum":
                     return new AFValue(minimum, time);
             }
-
             return null;
         }
 
