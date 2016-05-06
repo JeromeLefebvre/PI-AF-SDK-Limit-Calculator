@@ -6,6 +6,7 @@ using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using OSIsoft.AF.Asset;
 using Newtonsoft.Json;
+using LimitCalculatorSDK;
 
 namespace Limit_Calculator
 {
@@ -102,17 +103,6 @@ namespace Limit_Calculator
         {
             EventFrameSearch h = new EventFrameSearch(this, db);
             h.Show();
-        }
-    }
-    class CalculationPreference
-    {
-        public string sensorPath { get; set; }
-        public string eventFrameQuery { get; set; }
-        public Dictionary<AFAttributeTrait, string> calculationsToPerform = new Dictionary<AFAttributeTrait, string> { };
-        public CalculationPreference(string path, string query)
-        {
-            sensorPath = path;
-            eventFrameQuery = query;
         }
     }
 }

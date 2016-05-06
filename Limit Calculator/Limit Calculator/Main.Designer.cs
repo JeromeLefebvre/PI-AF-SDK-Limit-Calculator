@@ -144,9 +144,6 @@
             this.displaySearch.UseVisualStyleBackColor = true;
             this.displaySearch.Click += new System.EventHandler(this.displaySearch_Click);
             // 
-            // calculationPreferenceBindingSource
-            // 
-            this.calculationPreferenceBindingSource.DataSource = typeof(Limit_Calculator.CalculationPreference);
             // 
             // Main
             // 
