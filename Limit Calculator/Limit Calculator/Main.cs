@@ -48,9 +48,6 @@ namespace Limit_Calculator
 
             ICollection<AFAttributeTrait>  limits = AFAttributeTrait.AllLimits;
 
-            
-
-
             int horizontal = 10;
             int vertical = 25;
 
@@ -152,7 +149,8 @@ namespace Limit_Calculator
         {
 
             string output = JsonConvert.SerializeObject(calculations, Formatting.Indented);
-            File.WriteAllText(@"C:\Users\jlefebvre\Desktop\setting.json", output);
+            string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            File.WriteAllText(homedirectory + @"\\" + "LimitCalculatorSetting.json", output);
         }
 
 

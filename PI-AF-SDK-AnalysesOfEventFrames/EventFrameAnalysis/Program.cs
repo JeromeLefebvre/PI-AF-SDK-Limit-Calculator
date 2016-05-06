@@ -53,7 +53,8 @@ namespace EventFrameAnalysis
             afdatabse = sensor.Database;
             List<CalculationPreference> calculationPreferences;
 
-            string path = @"C:\Users\jlefebvre\Desktop\setting.json";
+            string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string path = homedirectory + @"\\" + "LimitCalculatorSetting.json";
 
             string preferenceText = File.ReadAllText(path);
             calculationPreferences = JsonConvert.DeserializeObject<List<CalculationPreference>>(preferenceText);
