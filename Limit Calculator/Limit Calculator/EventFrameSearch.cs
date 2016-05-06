@@ -1,9 +1,6 @@
 ﻿using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Windows.Forms;
 
 namespace Limit_Calculator
