@@ -1,0 +1,15 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PI-AF-SDK-Limit-Calculator", "PI-AF-SDK-Limit-Calculator\PI-AF-SDK-Limit-Calculator.shproj", "{CA1E8C5E-0B36-4403-B8BF-6C0379326F95}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		PI-AF-SDK-Limit-Calculator\PI-AF-SDK-Limit-Calculator.projitems*{ca1e8c5e-0b36-4403-b8bf-6c0379326f95}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
