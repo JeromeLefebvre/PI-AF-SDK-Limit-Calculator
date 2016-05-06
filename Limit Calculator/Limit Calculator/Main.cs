@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using OSIsoft.AF;
-using OSIsoft.AF.EventFrame;
 using OSIsoft.AF.UI;
-using Newtonsoft.Json;
 using OSIsoft.AF.Asset;
-using OSIsoft.AF.UI.Search;
+using Newtonsoft.Json;
 
 namespace Limit_Calculator
 {
     public partial class Main : Form
     {
         static List<CalculationPreference> calculations = new List<CalculationPreference> { };
-        static string path = @"C:\Users\jlefebvre\Desktop\setting.json";
+        static string preferenceFilePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\" + "LimitCalculatorSetting.json";
 
         static List<string> possibleOperations = new List<string> { "None",
                                                                     "Tag minimun",
@@ -35,11 +33,9 @@ namespace Limit_Calculator
         {
             InitializeComponent();
             afDatabasePicker.SystemPicker = piSystemPicker;
-            if (File.Exists(path))
+            if (File.Exists(preferenceFilePath))
             {
-                string preferenceText = File.ReadAllText(path);
-                // Need to add in a way to properly deserlialize the object or at least, manually append it.
-                //calculations = JsonConvert.DeserializeObject<List<CalculationPreference>>(preferenceText);
+                string preferenceText = File.ReadAllText(preferenceFilePath);
             }
 
             ICollection<AFAttributeTrait>  limits = AFAttributeTrait.AllLimits;
@@ -92,7 +88,6 @@ namespace Limit_Calculator
                     preference.calculationsToPerform[limit] = comboBox.Text;
                 }
             }
-
             calculations.Add(preference);
             save();
         }
@@ -100,8 +95,7 @@ namespace Limit_Calculator
         private void save()
         {
             string output = JsonConvert.SerializeObject(calculations, Formatting.Indented);
-            string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            File.WriteAllText(homedirectory + @"\\" + "LimitCalculatorSetting.json", output);
+            File.WriteAllText(preferenceFilePath, output);
         }
 
         private void displaySearch_Click(object sender, EventArgs e)
