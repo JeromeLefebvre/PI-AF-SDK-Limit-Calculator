@@ -5,9 +5,33 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PI-AF-SDK-Limit-Calculator", "PI-AF-SDK-Limit-Calculator\PI-AF-SDK-Limit-Calculator.shproj", "{CA1E8C5E-0B36-4403-B8BF-6C0379326F95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Limit Calculator", "Limit Calculator\Limit Calculator\Limit Calculator.csproj", "{6D0DEF9E-07AE-4C6C-95C3-87EE841E0B25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LimitCalculatorSDK", "LimitCalculatorSDK\LimitCalculatorSDK\LimitCalculatorSDK.csproj", "{502555DE-FC5A-4505-B37C-ED7CA523E82D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventFrameAnalysis", "AnalysesOfEventFrames\EventFrameAnalysis\EventFrameAnalysis.csproj", "{B9984E48-74EE-49B9-B86F-35BF67D42C11}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		PI-AF-SDK-Limit-Calculator\PI-AF-SDK-Limit-Calculator.projitems*{ca1e8c5e-0b36-4403-b8bf-6c0379326f95}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6D0DEF9E-07AE-4C6C-95C3-87EE841E0B25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D0DEF9E-07AE-4C6C-95C3-87EE841E0B25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D0DEF9E-07AE-4C6C-95C3-87EE841E0B25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D0DEF9E-07AE-4C6C-95C3-87EE841E0B25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{502555DE-FC5A-4505-B37C-ED7CA523E82D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{502555DE-FC5A-4505-B37C-ED7CA523E82D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{502555DE-FC5A-4505-B37C-ED7CA523E82D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{502555DE-FC5A-4505-B37C-ED7CA523E82D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9984E48-74EE-49B9-B86F-35BF67D42C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9984E48-74EE-49B9-B86F-35BF67D42C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9984E48-74EE-49B9-B86F-35BF67D42C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9984E48-74EE-49B9-B86F-35BF67D42C11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
