@@ -54,7 +54,7 @@ namespace EventFrameAnalysis
             List<CalculationPreference> calculationPreferences;
 
             string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string path = homedirectory + @"\\" + "LimitCalculatorSetting.json";
+            string path = homedirectory + @"\" + "LimitCalculatorSetting.json";
 
             string preferenceText = File.ReadAllText(path);
             calculationPreferences = JsonConvert.DeserializeObject<List<CalculationPreference>>(preferenceText);
