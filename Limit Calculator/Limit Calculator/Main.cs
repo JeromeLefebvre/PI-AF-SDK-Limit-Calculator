@@ -131,6 +131,10 @@ namespace Limit_Calculator
             PISystem pisystem = piSystemPicker.PISystem;
             if (pisystem != null)
             {
+                AFElement limitcalculator = piSystemPicker.PISystem.Databases["Configuration"].Elements["LimitCalculator"];
+                if (limitcalculator == null)
+                {
+                }
                 configurationTreeView.AFRoot = piSystemPicker.PISystem.Databases["Configuration"].Elements["LimitCalculator"];
             }
         }
