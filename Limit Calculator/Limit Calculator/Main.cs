@@ -12,6 +12,7 @@ namespace Limit_Calculator
     public partial class Main : Form
     {
         static List<string> possibleOperations = new List<string> { "None",
+                                                                    "Tag Zero",
                                                                     "Minimum",
                                                                     "μ　- 3σ",
                                                                     "μ　- 2σ",
@@ -20,7 +21,8 @@ namespace Limit_Calculator
                                                                     "μ　+ σ",
                                                                     "μ　+ 2σ",
                                                                     "μ　+ 3σ",
-                                                                    "Maximum"};
+                                                                    "Maximum",
+                                                                    "Tag Maximum"};
         private AFDatabase db = null;
 
         public Main()

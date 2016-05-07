@@ -59,11 +59,9 @@
             this.Load += new System.EventHandler(this.EventFrameSearch_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
-
         private OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage eventFrameSearchPage;
     }
 }
