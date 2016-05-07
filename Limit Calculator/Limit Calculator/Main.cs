@@ -55,6 +55,7 @@ namespace Limit_Calculator
         private void Main_Load(object sender, EventArgs e)
         {
             //queryTextBox.Text = @"Start:>*-10h End:<*-1h Inprogress:=False";
+            // TODO: Create the LimitCalculator Element if it does not exists 
         }
 
         private void afDatabasePicker_SelectionChange(object sender, OSIsoft.AF.UI.SelectionChangeEventArgs e)
@@ -89,6 +90,7 @@ namespace Limit_Calculator
             newCalculation.Attributes.Add("Configuration");
             newCalculation.Attributes["Configuration"].Type = typeof(string);
             newCalculation.Attributes["Configuration"].SetValue(new AFValue(preference.JSON()));
+            // TODO: Add in a check to see if the preference is already there
             preferenceRoot.Elements.Add(newCalculation);
             preferenceRoot.CheckIn();
         }
