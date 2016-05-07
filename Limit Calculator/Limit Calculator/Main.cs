@@ -12,7 +12,6 @@ namespace Limit_Calculator
     public partial class Main : Form
     {
         static List<string> possibleOperations = new List<string> { "None",
-                                                                    "Tag minimun",
                                                                     "Minimum",
                                                                     "μ　- 3σ",
                                                                     "μ　- 2σ",
@@ -21,8 +20,7 @@ namespace Limit_Calculator
                                                                     "μ　+ σ",
                                                                     "μ　+ 2σ",
                                                                     "μ　+ 3σ",
-                                                                    "Maximum",
-                                                                    "Tag maximum"};
+                                                                    "Maximum"};
         private AFDatabase db = null;
 
         public Main()
@@ -90,7 +88,10 @@ namespace Limit_Calculator
             newCalculation.Attributes.Add("Configuration");
             newCalculation.Attributes["Configuration"].Type = typeof(string);
             newCalculation.Attributes["Configuration"].SetValue(new AFValue(preference.JSON()));
-            // TODO: Add in a check to see if the preference is already there
+            AFElement alreadyThere = preferenceRoot.Elements[calculationName.Text];
+            if (alreadyThere != null)
+                preferenceRoot.Elements.Remove(alreadyThere);
+            
             preferenceRoot.Elements.Add(newCalculation);
             preferenceRoot.CheckIn();
         }
@@ -161,9 +162,7 @@ namespace Limit_Calculator
                 }
                 AFAttribute sensor = AFAttribute.FindAttribute(preference.sensorPath, db);
                 afTreeView.AFSelect(sensor, db, preference.sensorPath);
-                //afTreeView.SelectedNode = afTreeView.
             }
-            
         }
     }
 }

@@ -113,7 +113,11 @@
             this.afTreeView.Location = new System.Drawing.Point(10, 72);
             this.afTreeView.Name = "afTreeView";
             this.afTreeView.ShowAttributes = true;
+            this.afTreeView.ShowContacts = false;
+            this.afTreeView.ShowElementTemplates = false;
+            this.afTreeView.ShowEnumerations = false;
             this.afTreeView.ShowNodeToolTips = true;
+            this.afTreeView.ShowPlugIns = false;
             this.afTreeView.Size = new System.Drawing.Size(372, 267);
             this.afTreeView.TabIndex = 6;
             // 
