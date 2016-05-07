@@ -32,16 +32,16 @@ namespace LimitCalculatorSDK
             this.preference = preference;
             string afattributepath = preference.sensorPath;
             string eventQuery = preference.eventFrameQuery;
-            calculationsToPerform = preference.calculationsToPerform;
+            calculationsToPerform = preference.getTraitDictionary();
 
-            foreach (KeyValuePair<AFAttributeTrait, string> pair in preference.calculationsToPerform)
+            foreach (KeyValuePair<AFAttributeTrait, string> pair in calculationsToPerform)
             {
                 bounds[pair.Key] = new AFValues();
             }
             sensor = AFAttribute.FindAttribute(afattributepath, null);
             pisystem = sensor.PISystem;
             afdatabse = sensor.Database;
-            foreach (KeyValuePair<AFAttributeTrait, string> pair in preference.calculationsToPerform)
+            foreach (KeyValuePair<AFAttributeTrait, string> pair in calculationsToPerform)
             {
                 boundAttributes[pair.Key] = sensor.GetAttributeByTrait(pair.Key);
             }

@@ -2,6 +2,7 @@
 using System.Linq;
 
 using OSIsoft.AF.Asset;
+using Newtonsoft.Json;
 
 namespace LimitCalculatorSDK
 {
@@ -9,24 +10,43 @@ namespace LimitCalculatorSDK
     {
         public string sensorPath { get; set; }
         public string eventFrameQuery { get; set; }
-        public Dictionary<AFAttributeTrait, string> calculationsToPerform = new Dictionary<AFAttributeTrait, string> { };
-        public Dictionary<string, string> calculationsToPerformRaw = new Dictionary<string, string> { };
+        //public Dictionary<AFAttributeTrait, string> calculationsToPerformExplicit { get; };
+        public Dictionary<string, string> calculationsToPerform = new Dictionary<string, string> { };
         private Dictionary<string, AFAttributeTrait> reverse = AFAttributeTrait.AllLimits.ToDictionary(p => p.Name, p => p);
 
-        public CalculationPreference(string path, string query)
+        public CalculationPreference(string sensorPath, string eventFrameQuery, Dictionary<string, string> calculationsToPerform)
         {
-            sensorPath = path;
-            eventFrameQuery = query;
+            this.sensorPath = sensorPath;
+            this.eventFrameQuery = eventFrameQuery;
+            this.calculationsToPerform = calculationsToPerform;
         }
 
+        public static CalculationPreference CalculationPreferenceFromJSON(string json)
+        {
+            CalculationPreference calc = JsonConvert.DeserializeObject<CalculationPreference>(json);
+            return calc;
+        }
+
+        public Dictionary<AFAttributeTrait, string> getTraitDictionary()
+        {
+            return calculationsToPerform.ToDictionary(p => reverse[p.Key], p => p.Value);
+        }
+        /*
         public void nameToTrait()
         {
-            calculationsToPerform = calculationsToPerformRaw.ToDictionary(p => reverse[p.Key], p => p.Value);
-        }
+            calculationsToPerform = calculationsToPerform.ToDictionary(p => reverse[p.Key], p => p.Value);
+        } 
 
         public void traitToName()
         {
-            calculationsToPerformRaw = calculationsToPerform.ToDictionary(p => p.Key.Name, p => p.Value);
+            calculationsToPerform = calculationsToPerform.ToDictionary(p => p.Key.Name, p => p.Value);
+        }   */
+
+        public string JSON()
+        {
+            string output = JsonConvert.SerializeObject(this, Formatting.Indented);
+            return output;
         }
+
     }
 }

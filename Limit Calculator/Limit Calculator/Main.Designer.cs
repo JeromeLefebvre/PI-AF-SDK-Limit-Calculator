@@ -39,6 +39,9 @@
             this.eventLog1 = new System.Diagnostics.EventLog();
             this.displaySearch = new System.Windows.Forms.Button();
             this.calculationPreferenceBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.configurationTreeView = new OSIsoft.AF.UI.AFTreeView();
+            this.label2 = new System.Windows.Forms.Label();
+            this.calculationName = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -64,6 +67,7 @@
             this.piSystemPicker.ShowProperties = false;
             this.piSystemPicker.Size = new System.Drawing.Size(370, 22);
             this.piSystemPicker.TabIndex = 0;
+            this.piSystemPicker.SelectionChange += new OSIsoft.AF.UI.SelectionChangeEventHandler(this.piSystemPicker_SelectionChange);
             // 
             // afDatabasePicker
             // 
@@ -88,7 +92,7 @@
             // 
             // queryTextBox
             // 
-            this.queryTextBox.Location = new System.Drawing.Point(403, 32);
+            this.queryTextBox.Location = new System.Drawing.Point(402, 60);
             this.queryTextBox.Multiline = true;
             this.queryTextBox.Name = "queryTextBox";
             this.queryTextBox.Size = new System.Drawing.Size(379, 50);
@@ -97,7 +101,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(401, 12);
+            this.label1.Location = new System.Drawing.Point(400, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 12);
             this.label1.TabIndex = 3;
@@ -115,7 +119,7 @@
             // 
             // addToPreference
             // 
-            this.addToPreference.Location = new System.Drawing.Point(403, 316);
+            this.addToPreference.Location = new System.Drawing.Point(402, 345);
             this.addToPreference.Name = "addToPreference";
             this.addToPreference.Size = new System.Drawing.Size(104, 23);
             this.addToPreference.TabIndex = 7;
@@ -125,9 +129,9 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(403, 124);
+            this.panel1.Location = new System.Drawing.Point(402, 152);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(282, 175);
+            this.panel1.Size = new System.Drawing.Size(282, 187);
             this.panel1.TabIndex = 25;
             // 
             // eventLog1
@@ -136,7 +140,7 @@
             // 
             // displaySearch
             // 
-            this.displaySearch.Location = new System.Drawing.Point(403, 88);
+            this.displaySearch.Location = new System.Drawing.Point(402, 116);
             this.displaySearch.Name = "displaySearch";
             this.displaySearch.Size = new System.Drawing.Size(75, 23);
             this.displaySearch.TabIndex = 27;
@@ -144,12 +148,40 @@
             this.displaySearch.UseVisualStyleBackColor = true;
             this.displaySearch.Click += new System.EventHandler(this.displaySearch_Click);
             // 
+            // configurationTreeView
+            // 
+            this.configurationTreeView.HideSelection = false;
+            this.configurationTreeView.Location = new System.Drawing.Point(10, 345);
+            this.configurationTreeView.Name = "configurationTreeView";
+            this.configurationTreeView.ShowNodeToolTips = true;
+            this.configurationTreeView.Size = new System.Drawing.Size(372, 151);
+            this.configurationTreeView.TabIndex = 28;
+            this.configurationTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.configurationTreeView_AfterSelect);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(401, 15);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(36, 12);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Name:";
+            // 
+            // calculationName
+            // 
+            this.calculationName.Location = new System.Drawing.Point(443, 12);
+            this.calculationName.Name = "calculationName";
+            this.calculationName.Size = new System.Drawing.Size(338, 19);
+            this.calculationName.TabIndex = 30;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 362);
+            this.ClientSize = new System.Drawing.Size(800, 542);
+            this.Controls.Add(this.calculationName);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.configurationTreeView);
             this.Controls.Add(this.displaySearch);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.addToPreference);
@@ -181,6 +213,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Diagnostics.EventLog eventLog1;
         private System.Windows.Forms.Button displaySearch;
+        private OSIsoft.AF.UI.AFTreeView configurationTreeView;
+        private System.Windows.Forms.TextBox calculationName;
+        private System.Windows.Forms.Label label2;
     }
 }
 
