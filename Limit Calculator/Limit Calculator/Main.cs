@@ -5,16 +5,12 @@ using System.Windows.Forms;
 using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using OSIsoft.AF.Asset;
-using Newtonsoft.Json;
 using LimitCalculatorSDK;
 
 namespace Limit_Calculator
 {
     public partial class Main : Form
     {
-        static List<CalculationPreference> calculations = new List<CalculationPreference> { };
-        static string preferenceFilePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + @"\" + "LimitCalculatorSetting.json";
-
         static List<string> possibleOperations = new List<string> { "None",
                                                                     "Tag minimun",
                                                                     "Minimum",
@@ -27,17 +23,12 @@ namespace Limit_Calculator
                                                                     "μ　+ 3σ",
                                                                     "Maximum",
                                                                     "Tag maximum"};
-        private BindingSource bindingSource = new BindingSource();
-        AFDatabase db = null;
+        private AFDatabase db = null;
 
         public Main()
         {
             InitializeComponent();
             afDatabasePicker.SystemPicker = piSystemPicker;
-            if (File.Exists(preferenceFilePath))
-            {
-                string preferenceText = File.ReadAllText(preferenceFilePath);
-            }
 
             ICollection<AFAttributeTrait>  limits = AFAttributeTrait.AllLimits;
 
@@ -63,7 +54,7 @@ namespace Limit_Calculator
 
         private void Main_Load(object sender, EventArgs e)
         {
-            queryTextBox.Text = @"Start:>*-10h End:<*-1h Inprogress:=False";
+            //queryTextBox.Text = @"Start:>*-10h End:<*-1h Inprogress:=False";
         }
 
         private void afDatabasePicker_SelectionChange(object sender, OSIsoft.AF.UI.SelectionChangeEventArgs e)
@@ -80,23 +71,26 @@ namespace Limit_Calculator
             AFTreeNode node = (AFTreeNode)afTreeView.SelectedNode;
             string path = node.AFPath;
             string query = queryTextBox.Text;
-            CalculationPreference preference = new CalculationPreference(path, query);
+            Dictionary<string, string> limits = new Dictionary<string, string> { };
+
             foreach (AFAttributeTrait limit in AFAttributeTrait.AllLimits)
             {
                 ComboBox comboBox = (ComboBox)panel1.Controls[limit.Name];
                 if (comboBox.Text != "None")
                 {
-                    preference.calculationsToPerform[limit] = comboBox.Text;
+                    limits[limit.Name] = comboBox.Text;
                 }
             }
-            calculations.Add(preference);
-            save();
-        }
+            CalculationPreference preference = new CalculationPreference(path, query, limits);
 
-        private void save()
-        {
-            string output = JsonConvert.SerializeObject(calculations, Formatting.Indented);
-            File.WriteAllText(preferenceFilePath, output);
+            AFElement preferenceRoot = ((AFElement)configurationTreeView.AFRoot);
+            AFElement newCalculation = new AFElement(calculationName.Text);
+
+            newCalculation.Attributes.Add("Configuration");
+            newCalculation.Attributes["Configuration"].Type = typeof(string);
+            newCalculation.Attributes["Configuration"].SetValue(new AFValue(preference.JSON()));
+            preferenceRoot.Elements.Add(newCalculation);
+            preferenceRoot.CheckIn();
         }
 
         private void displaySearch_Click(object sender, EventArgs e)
@@ -128,6 +122,42 @@ namespace Limit_Calculator
             search.EventFrameCriteria = criteria;
 
             h.Show();
+        }
+
+        private void piSystemPicker_SelectionChange(object sender, SelectionChangeEventArgs e)
+        {    
+            PISystem pisystem = piSystemPicker.PISystem;
+            if (pisystem != null)
+            {
+                configurationTreeView.AFRoot = piSystemPicker.PISystem.Databases["Configuration"].Elements["LimitCalculator"];
+            }
+        }
+
+        private void configurationTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            AFTreeNode node = (AFTreeNode)e.Node;
+            AFElement selectedCalculation = (AFElement)node.AFObject;
+            if (!selectedCalculation.IsRoot)
+            {
+                calculationName.Text = selectedCalculation.Name;
+                CalculationPreference preference = CalculationPreference.CalculationPreferenceFromJSON((string)selectedCalculation.Attributes["configuration"].GetValue().Value);
+                queryTextBox.Text = preference.eventFrameQuery;
+                Dictionary<AFAttributeTrait, string> limitCalculations = preference.getTraitDictionary();
+                foreach (AFAttributeTrait trait in AFAttributeTrait.AllLimits)
+                {
+                    ComboBox comboBox = (ComboBox)panel1.Controls[trait.Name];
+                    comboBox.Text = "None";
+                }
+                foreach (KeyValuePair<AFAttributeTrait, string> pair in limitCalculations)
+                {
+                    ComboBox comboBox = (ComboBox)panel1.Controls[pair.Key.Name];
+                    comboBox.Text = pair.Value;
+                }
+                AFAttribute sensor = AFAttribute.FindAttribute(preference.sensorPath, db);
+                afTreeView.AFSelect(sensor, db, preference.sensorPath);
+                //afTreeView.SelectedNode = afTreeView.
+            }
+            
         }
     }
 }
