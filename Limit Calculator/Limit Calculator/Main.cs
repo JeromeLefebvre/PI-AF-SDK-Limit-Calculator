@@ -118,7 +118,7 @@ namespace Limit_Calculator
 
             query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.InProgress, out token);
             if (token.Value != null)
-                criteria.InProgress = token.Value == "true" ? true : false;
+                criteria.InProgress = token.Value == "True" ? true : false;
             query.Tokens.Remove(token);
 
             criteria.LastFullSearchString = query.ToString();
