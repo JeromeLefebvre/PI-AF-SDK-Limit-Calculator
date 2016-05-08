@@ -51,6 +51,15 @@ namespace EventFrameAnalysis
             return timeless.IsMatch(ef);
         }
 
+        internal static AFEventFrameSearch currentEventFrame(AFEventFrameSearch query)
+        {
+            List<AFSearchToken> tokens = query.Tokens.ToList();
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.AllDescendants || t.Filter == AFSearchFilter.End);
+            AFSearchToken inprogress = new AFSearchToken(AFSearchFilter.InProgress, AFSearchOperator.Equal, "True");
+            tokens.Add(inprogress);
+            return new AFEventFrameSearch(query.Database, "CurrentEventFrame", tokens);
+        }
+
         internal AFValue performCalculation(string calculationName, AFValues slice)
         {
             IDictionary<AFSummaryTypes, AFValue> statisticForSlice = GetStatistics(slice);
@@ -87,8 +96,8 @@ namespace EventFrameAnalysis
         internal void InitialRun()
         {
             ComputeStatistics();
-            AFEventFrameSearch currentEventFrameQuery = new AFEventFrameSearch(afdatabse, "currentEvent", eventFrameQuery.Tokens.ToList());
-            currentEventFrameQuery.Tokens.Add(new AFSearchToken(AFSearchFilter.InProgress, AFSearchOperator.Equal, "True"));
+            AFEventFrameSearch currentEventFrameQuery = currentEventFrame(eventFrameQuery);
+
             IEnumerable<AFEventFrame> currentEventFrames = currentEventFrameQuery.FindEventFrames(0, true, int.MaxValue);
             foreach (AFEventFrame currentEventFrame in currentEventFrames)
             {
