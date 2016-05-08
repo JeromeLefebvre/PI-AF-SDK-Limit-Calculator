@@ -20,8 +20,6 @@ using System.Collections.Generic;
 using OSIsoft.AF;
 using OSIsoft.AF.EventFrame;
 using OSIsoft.AF.Asset;
-using System.IO;
-using Newtonsoft.Json;
 using LimitCalculatorSDK;
 
 namespace EventFrameAnalysis
@@ -33,7 +31,6 @@ namespace EventFrameAnalysis
         static ElapsedEventHandler elapsedEH;
         static EventHandler<AFChangedEventArgs> changedEH;
 
-        static PISystem pisystem ;
         static AFDatabase afdatabse;
         static AFAttribute sensor;
         static List<LimitCalculation> calculations;
@@ -53,17 +50,20 @@ namespace EventFrameAnalysis
             afdatabse = sensor.Database;
             List<CalculationPreference> calculationPreferences;
 
-            string homedirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string path = homedirectory + @"\" + "LimitCalculatorSetting.json";
-
-            string preferenceText = File.ReadAllText(path);
-            calculationPreferences = JsonConvert.DeserializeObject<List<CalculationPreference>>(preferenceText);
+            calculationPreferences = new List<CalculationPreference> { };
+            PISystem pisystem = afdatabse.PISystem;
+            AFDatabase configuration = pisystem.Databases["Configuration"];
+            AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
+            foreach (AFElement preference in preferences)
+            {
+                string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
+                calculationPreferences.Add(CalculationPreference.CalculationPreferenceFromJSON(JSON));
+            }
 
             calculations = new List<LimitCalculation> { };
 
             foreach (CalculationPreference pref in calculationPreferences)
             {
-                pref.nameToTrait();
                 calculations.Add(new LimitCalculation(pref));
             } 
 

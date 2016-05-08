@@ -114,10 +114,12 @@
             this.afTreeView.Name = "afTreeView";
             this.afTreeView.ShowAttributes = true;
             this.afTreeView.ShowContacts = false;
+            this.afTreeView.ShowDatabases = false;
             this.afTreeView.ShowElementTemplates = false;
             this.afTreeView.ShowEnumerations = false;
             this.afTreeView.ShowNodeToolTips = true;
             this.afTreeView.ShowPlugIns = false;
+            this.afTreeView.ShowUOMs = true;
             this.afTreeView.Size = new System.Drawing.Size(372, 267);
             this.afTreeView.TabIndex = 6;
             // 

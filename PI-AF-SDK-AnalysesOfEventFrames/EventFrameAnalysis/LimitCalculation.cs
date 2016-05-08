@@ -13,50 +13,46 @@ namespace EventFrameAnalysis
 {
     class LimitCalculation
     {
-        private PISystem pisystem = null;
-        private AFDatabase afdatabse = null;
+        private PISystem pisystem;
+        private AFDatabase afdatabse;
         static readonly AFEnumerationValue nodata = (new PIServers().DefaultPIServer).StateSets["SYSTEM"]["NO Data"];
         static AFTimeSpan interval = new AFTimeSpan(seconds: 1);
 
         private readonly AFEventFrameSearch eventFrameQuery;
         private readonly AFEventFrameSearch timeLessQuery;
         private readonly AFAttribute sensor;
-        //private List<AFValues> bounds = new List<AFValues> { new AFValues(), new AFValues() };
         private Dictionary<AFAttributeTrait, AFValues> bounds = new Dictionary<AFAttributeTrait, AFValues> { };
-
-        //private List<AFAttribute> boundAttributes;
         private Dictionary<AFAttributeTrait, AFAttribute> boundAttributes = new Dictionary<AFAttributeTrait, AFAttribute> { };
 
-        CalculationPreference preference;
         Dictionary<AFAttributeTrait, string> calculationsToPerform;
 
         public LimitCalculation(CalculationPreference preference)
         {
-            this.preference = preference;
             string afattributepath = preference.sensorPath;
             string eventQuery = preference.eventFrameQuery;
-            calculationsToPerform = preference.calculationsToPerform;
+            calculationsToPerform = preference.getTraitDictionary();
 
-            foreach (KeyValuePair<AFAttributeTrait, string> pair in preference.calculationsToPerform)
-            {
-                bounds[pair.Key] = new AFValues();
-            }
             sensor = AFAttribute.FindAttribute(afattributepath, null);
             pisystem = sensor.PISystem;
             afdatabse = sensor.Database;
-            foreach (KeyValuePair<AFAttributeTrait, string> pair in preference.calculationsToPerform)
+            foreach (KeyValuePair<AFAttributeTrait, string> pair in calculationsToPerform)
             {
+                bounds[pair.Key] = new AFValues();
                 boundAttributes[pair.Key] = sensor.GetAttributeByTrait(pair.Key);
             }
-
             eventFrameQuery = new AFEventFrameSearch(afdatabse, "eventFrameSearch", eventQuery);
-            List<AFSearchToken> tokens = eventFrameQuery.Tokens.ToList();
-            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End);
-            timeLessQuery = new AFEventFrameSearch(afdatabse, "AllEventFrames", tokens);
             InitialRun();
         }
 
-        internal AFValue performCalculation (string calculationName, AFValues slice)
+        internal static bool timelessMatch(AFEventFrameSearch query, AFEventFrame ef)
+        {
+            List<AFSearchToken> tokens = query.Tokens.ToList();
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End);
+            AFEventFrameSearch timeless = new AFEventFrameSearch(query.Database, "AllEventFrames", tokens);
+            return timeless.IsMatch(ef);
+        }
+
+        internal AFValue performCalculation(string calculationName, AFValues slice)
         {
             IDictionary<AFSummaryTypes, AFValue> statisticForSlice = GetStatistics(slice);
             AFTime time = statisticForSlice[AFSummaryTypes.Average].Timestamp;
@@ -85,7 +81,7 @@ namespace EventFrameAnalysis
                 case "minimum":
                     return new AFValue(minimum, time);
             }
-
+            // this should throw an exception
             return null;
         }
 
@@ -139,14 +135,14 @@ namespace EventFrameAnalysis
 
         public static IDictionary<AFSummaryTypes, AFValue> GetStatistics(AFValues values)
         {
-            
-            if (values.Count != 1) {
+            if (values.Count != 1)
+            {
                 AFTimeRange range = new AFTimeRange(values[0].Timestamp, values[values.Count - 1].Timestamp);
                 return values.Summary(range, AFSummaryTypes.All, AFCalculationBasis.EventWeighted, AFTimestampCalculation.MostRecentTime);
             }
-           else
+            else
             {
-                IDictionary < AFSummaryTypes, AFValue > dict = new Dictionary<AFSummaryTypes, AFValue>();
+                IDictionary<AFSummaryTypes, AFValue> dict = new Dictionary<AFSummaryTypes, AFValue>();
                 dict[AFSummaryTypes.Average] = values[0];
                 dict[AFSummaryTypes.Maximum] = values[0];
                 dict[AFSummaryTypes.Minimum] = values[0];
@@ -182,7 +178,7 @@ namespace EventFrameAnalysis
 
         public void performAction(AFEventFrame lastestEventFrame, AFChangeInfoAction action)
         {
-            if (timeLessQuery.IsMatch(lastestEventFrame))
+            if (timelessMatch(eventFrameQuery, lastestEventFrame))
             {
                 if (action == AFChangeInfoAction.Added)
                 {
