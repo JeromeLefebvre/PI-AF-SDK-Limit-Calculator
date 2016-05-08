@@ -19,7 +19,6 @@ namespace EventFrameAnalysis
         static AFTimeSpan interval = new AFTimeSpan(seconds: 1);
 
         private readonly AFEventFrameSearch eventFrameQuery;
-        private readonly AFEventFrameSearch timeLessQuery;
         private readonly AFAttribute sensor;
         private Dictionary<AFAttributeTrait, AFValues> bounds = new Dictionary<AFAttributeTrait, AFValues> { };
         private Dictionary<AFAttributeTrait, AFAttribute> boundAttributes = new Dictionary<AFAttributeTrait, AFAttribute> { };
