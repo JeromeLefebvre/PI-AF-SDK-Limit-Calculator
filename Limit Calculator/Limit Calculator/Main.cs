@@ -67,6 +67,7 @@ namespace Limit_Calculator
             if (db != null)
             {
                 afTreeView.AFRoot = db.Elements;
+                
             }
         }
 
@@ -106,6 +107,7 @@ namespace Limit_Calculator
             EventFrameSearch h = new EventFrameSearch(this, db);
 
             OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage search = (OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage)h.Controls["eventFrameSearchPage"];
+            search.Database = db;
             AFEventFrameCriteria criteria = search.EventFrameCriteria;
 
             OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", queryTextBox.Text);
