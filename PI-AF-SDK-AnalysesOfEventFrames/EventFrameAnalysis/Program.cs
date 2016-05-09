@@ -51,6 +51,7 @@ namespace EventFrameAnalysis
             PISystem pisystem = afdatabase.PISystem;
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
+
             foreach (AFElement preference in preferences)
             {
                 string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
