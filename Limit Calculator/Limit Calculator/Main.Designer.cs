@@ -67,6 +67,7 @@
             this.piSystemPicker.ShowProperties = false;
             this.piSystemPicker.Size = new System.Drawing.Size(370, 22);
             this.piSystemPicker.TabIndex = 0;
+            this.piSystemPicker.ConnectionChange += new OSIsoft.AF.UI.ConnectionChangeEventHandler(this.piSystemPicker_ConnectionChange);
             this.piSystemPicker.SelectionChange += new OSIsoft.AF.UI.SelectionChangeEventHandler(this.piSystemPicker_SelectionChange);
             // 
             // afDatabasePicker

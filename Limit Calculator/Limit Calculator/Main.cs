@@ -6,12 +6,14 @@ using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using OSIsoft.AF.Asset;
 using LimitCalculatorSDK;
+using System.Security.Principal;
+using System.Net;
 
 namespace Limit_Calculator
 {
     public partial class Main : Form
     {
-        static List<string> possibleOperations = new List<string> { "None",
+        static readonly List<string> possibleOperations = new List<string> { "None",
                                                                     "Minimum",
                                                                     "μ - 3σ",
                                                                     "μ - 2σ",
@@ -28,25 +30,28 @@ namespace Limit_Calculator
             InitializeComponent();
             afDatabasePicker.SystemPicker = piSystemPicker;
 
-            ICollection<AFAttributeTrait>  limits = AFAttributeTrait.AllLimits;
+            CreatePanel();
+        }
 
+        private void CreatePanel()
+        {
             int horizontal = 10;
             int vertical = 25;
-
-            foreach (AFAttributeTrait limit in limits)
+            foreach (AFAttributeTrait limit in AFAttributeTrait.AllLimits)
             {
-                Label limitLabel = new Label();
-                limitLabel.Text = limit.Abbreviation;
-                limitLabel.Location = new System.Drawing.Point(horizontal, vertical);
-                panel1.Controls.Add(limitLabel);
+                panel1.Controls.Add(new Label
+                {
+                    Text = limit.Abbreviation,
+                    Location = new System.Drawing.Point(horizontal, vertical)
+                });
 
-                ComboBox limitCombo = new ComboBox();
-                limitCombo.Name = limit.Name;
-                limitCombo.Location = new System.Drawing.Point(horizontal + 100, vertical);
-                limitCombo.DataSource = possibleOperations.ToArray();
-                
-                panel1.Controls.Add(limitCombo);
-                vertical += limitLabel.Height - 1;
+                panel1.Controls.Add(new ComboBox
+                {
+                    Location = new System.Drawing.Point(horizontal + 100, vertical),
+                    Name = limit.Name,
+                    DataSource = possibleOperations.ToArray()
+                });
+                vertical += 22;
             }
         }
 
@@ -135,9 +140,16 @@ namespace Limit_Calculator
                 AFElement limitcalculator = piSystemPicker.PISystem.Databases["Configuration"].Elements["LimitCalculator"];
                 if (limitcalculator == null)
                 {
+                    piSystemPicker.PISystem.Databases["Configuration"].Elements.Add(new AFElement("LimitCalculator"));
+                    piSystemPicker.PISystem.Databases["Configuration"].CheckIn();
                 }
                 configurationTreeView.AFRoot = piSystemPicker.PISystem.Databases["Configuration"].Elements["LimitCalculator"];
             }
+        }
+
+        private void updatePreferenceTree()
+        {
+            configurationTreeView.AFRoot = piSystemPicker.PISystem.Databases["Configuration"].Elements["LimitCalculator"];
         }
 
         private void configurationTreeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -163,6 +175,11 @@ namespace Limit_Calculator
                 AFAttribute sensor = AFAttribute.FindAttribute(preference.sensorPath, db);
                 afTreeView.AFSelect(sensor, db, preference.sensorPath);
             }
+        }
+
+        private void piSystemPicker_ConnectionChange(object sender, SelectionChangeEventArgs e)
+        {
+            updatePreferenceTree();
         }
     }
 }
