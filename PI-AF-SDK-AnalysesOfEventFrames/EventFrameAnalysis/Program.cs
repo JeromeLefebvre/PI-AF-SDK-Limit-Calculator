@@ -31,8 +31,7 @@ namespace EventFrameAnalysis
         static ElapsedEventHandler elapsedEH;
         static EventHandler<AFChangedEventArgs> changedEH;
 
-        static AFDatabase afdatabse;
-        static AFAttribute sensor;
+        static AFDatabase afdatabase;
         static List<LimitCalculation> calculations;
 
         public static void WaitForQuit()
@@ -45,13 +44,14 @@ namespace EventFrameAnalysis
 
         static void Main(string[] args)
         {
-            sensor = AFAttribute.FindAttribute(Properties.Settings.Default.SensorPath, null);
-            //pisystem = sensor.PISystem;
-            afdatabse = sensor.Database;
+            PISystems pisystems = new PISystems();
+            PISystem sys = pisystems.DefaultPISystem;
+
+            afdatabase = sys.Databases[Properties.Settings.Default.AFDatabase];
             List<CalculationPreference> calculationPreferences;
 
             calculationPreferences = new List<CalculationPreference> { };
-            PISystem pisystem = afdatabse.PISystem;
+            PISystem pisystem = afdatabase.PISystem;
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
             foreach (AFElement preference in preferences)
@@ -65,10 +65,10 @@ namespace EventFrameAnalysis
             foreach (CalculationPreference pref in calculationPreferences)
             {
                 calculations.Add(new LimitCalculation(pref));
-            } 
+            }
 
             // Initialize the cookie (bookmark)
-            afdatabse.FindChangedItems(false, int.MaxValue, null, out cookie);
+            afdatabase.FindChangedItems(false, int.MaxValue, null, out cookie);
 
             // Initialize the timer, used to refresh the database
             elapsedEH = new System.Timers.ElapsedEventHandler(OnElapsed);
@@ -76,12 +76,12 @@ namespace EventFrameAnalysis
 
             // Set the function to be triggered once a change is detected
             changedEH = new EventHandler<AFChangedEventArgs>(OnChanged);
-            afdatabse.Changed += changedEH;
+            afdatabase.Changed += changedEH;
             refreshTimer.Start();
 
             WaitForQuit();
 
-            afdatabse.Changed -= changedEH;
+            afdatabase.Changed -= changedEH;
             refreshTimer.Elapsed -= elapsedEH;
             refreshTimer.Stop();
         }
@@ -90,12 +90,12 @@ namespace EventFrameAnalysis
         {
             // Find changes since the last refresh
             List<AFChangeInfo> changes = new List<AFChangeInfo>();
-            changes.AddRange(afdatabse.FindChangedItems(true, int.MaxValue, cookie, out cookie));
-            AFChangeInfo.Refresh(afdatabse.PISystem, changes);
+            changes.AddRange(afdatabase.FindChangedItems(true, int.MaxValue, cookie, out cookie));
+            AFChangeInfo.Refresh(afdatabase.PISystem, changes);
 
             foreach (AFChangeInfo info in changes.FindAll(i => i.Identity == AFIdentity.EventFrame))
             {
-                AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabse.PISystem, true);
+                AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabase.PISystem, true);
                 
                 foreach (LimitCalculation calculation in calculations)
                 {
@@ -107,9 +107,9 @@ namespace EventFrameAnalysis
         internal static void OnElapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             // Refreshing Database will cause any external changes to be seen which will result in the triggering of the OnChanged event handler
-            lock (afdatabse)
+            lock (afdatabase)
             {
-                afdatabse.Refresh();
+                afdatabase.Refresh();
             }
             refreshTimer.Start();
         }

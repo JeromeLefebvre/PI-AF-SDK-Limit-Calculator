@@ -2,11 +2,8 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="EventFrameAnalysis.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SensorPath" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">\\localhost\JDIData\DataShort|sensor</Value>
-    </Setting>
-    <Setting Name="EventFrameQuery" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Name:="*Short*" Start:&gt;*-10m InProgress:=False</Value>
+    <Setting Name="AFDatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">\\localhost\JDIData\</Value>
     </Setting>
   </Settings>
 </SettingsFile>

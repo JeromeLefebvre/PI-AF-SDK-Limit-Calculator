@@ -25,19 +25,10 @@ namespace EventFrameAnalysis.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\localhost\\JDIData\\DataShort|sensor")]
-        public string SensorPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\localhost\\JDIData\\")]
+        public string AFDatabase {
             get {
-                return ((string)(this["SensorPath"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Name:=\"*Short*\" Start:>*-10m InProgress:=False")]
-        public string EventFrameQuery {
-            get {
-                return ((string)(this["EventFrameQuery"]));
+                return ((string)(this["AFDatabase"]));
             }
         }
     }
