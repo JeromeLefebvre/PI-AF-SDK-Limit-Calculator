@@ -84,9 +84,9 @@ namespace EventFrameAnalysis
                     return new AFValue(mean - stddev, time);
                 case "μ":
                     return new AFValue(mean, time);
-                case "maximum":
+                case "Maximum":
                     return new AFValue(maximum, time);
-                case "minimum":
+                case "Minimum":
                     return new AFValue(minimum, time);
             }
             // this should throw an exception

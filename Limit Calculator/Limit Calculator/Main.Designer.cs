@@ -42,6 +42,7 @@
             this.configurationTreeView = new OSIsoft.AF.UI.AFTreeView();
             this.label2 = new System.Windows.Forms.Label();
             this.calculationName = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -126,7 +127,7 @@
             // 
             // addToPreference
             // 
-            this.addToPreference.Location = new System.Drawing.Point(402, 345);
+            this.addToPreference.Location = new System.Drawing.Point(402, 371);
             this.addToPreference.Name = "addToPreference";
             this.addToPreference.Size = new System.Drawing.Size(104, 23);
             this.addToPreference.TabIndex = 7;
@@ -136,7 +137,7 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(402, 152);
+            this.panel1.Location = new System.Drawing.Point(402, 178);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(282, 187);
             this.panel1.TabIndex = 25;
@@ -168,7 +169,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(401, 15);
+            this.label2.Location = new System.Drawing.Point(400, 15);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(36, 12);
             this.label2.TabIndex = 29;
@@ -176,16 +177,26 @@
             // 
             // calculationName
             // 
-            this.calculationName.Location = new System.Drawing.Point(443, 12);
+            this.calculationName.Location = new System.Drawing.Point(442, 12);
             this.calculationName.Name = "calculationName";
             this.calculationName.Size = new System.Drawing.Size(338, 19);
             this.calculationName.TabIndex = 30;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(400, 163);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(327, 12);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "Select the calculations that need to be perform for each slices";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 542);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.calculationName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.configurationTreeView);
@@ -223,6 +234,7 @@
         private OSIsoft.AF.UI.AFTreeView configurationTreeView;
         private System.Windows.Forms.TextBox calculationName;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 

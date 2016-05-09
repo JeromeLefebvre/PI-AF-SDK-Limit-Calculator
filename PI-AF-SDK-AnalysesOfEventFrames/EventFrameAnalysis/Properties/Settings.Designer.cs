@@ -25,7 +25,7 @@ namespace EventFrameAnalysis.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\\\\localhost\\JDIData\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("JDIData")]
         public string AFDatabase {
             get {
                 return ((string)(this["AFDatabase"]));

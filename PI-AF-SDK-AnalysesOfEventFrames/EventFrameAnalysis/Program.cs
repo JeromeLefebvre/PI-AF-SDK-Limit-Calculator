@@ -44,10 +44,7 @@ namespace EventFrameAnalysis
 
         static void Main(string[] args)
         {
-            PISystems pisystems = new PISystems();
-            PISystem sys = pisystems.DefaultPISystem;
-
-            afdatabase = sys.Databases[Properties.Settings.Default.AFDatabase];
+            afdatabase = new PISystems().DefaultPISystem.Databases[Properties.Settings.Default.AFDatabase];
             List<CalculationPreference> calculationPreferences;
 
             calculationPreferences = new List<CalculationPreference> { };
@@ -60,12 +57,7 @@ namespace EventFrameAnalysis
                 calculationPreferences.Add(CalculationPreference.CalculationPreferenceFromJSON(JSON));
             }
 
-            calculations = new List<LimitCalculation> { };
-
-            foreach (CalculationPreference pref in calculationPreferences)
-            {
-                calculations.Add(new LimitCalculation(pref));
-            }
+            calculations = calculationPreferences.ConvertAll(preference => new LimitCalculation(preference));
 
             // Initialize the cookie (bookmark)
             afdatabase.FindChangedItems(false, int.MaxValue, null, out cookie);
