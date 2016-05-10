@@ -43,6 +43,7 @@ namespace EventFrameAnalysis
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
             logger.Info($"Will process {preferences.Count} preferences");
+
             List<DatabaseMonitoring> monitoredDB = new List<DatabaseMonitoring> { };
             Parallel.ForEach(preferences, (preference) =>
                 {
@@ -53,10 +54,11 @@ namespace EventFrameAnalysis
 
             WaitForQuit();
             
+            /*
             foreach(DatabaseMonitoring db in monitoredDB)
             {
                 db.quit();
-            }
+            }*/
         }
     }
 }

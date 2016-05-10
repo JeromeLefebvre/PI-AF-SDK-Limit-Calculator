@@ -175,7 +175,11 @@ namespace Limit_Calculator
                     comboBox.Text = pair.Value;
                 }
                 AFAttribute sensor = AFAttribute.FindAttribute(preference.sensorPath, db);
+                afDatabasePicker.AFDatabase = sensor.Database;
+                afTreeView.AFRoot = sensor.Database.Elements;
+
                 afTreeView.AFSelect(sensor, db, preference.sensorPath);
+
             }
         }
 
