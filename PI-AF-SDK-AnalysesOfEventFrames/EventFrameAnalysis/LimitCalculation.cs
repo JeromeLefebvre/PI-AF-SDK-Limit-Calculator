@@ -25,6 +25,8 @@ namespace EventFrameAnalysis
 
         Dictionary<AFAttributeTrait, string> calculationsToPerform;
 
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public LimitCalculation(CalculationPreference preference)
         {
             string afattributepath = preference.sensorPath;
@@ -111,7 +113,6 @@ namespace EventFrameAnalysis
             List<AFValues> trends = new List<AFValues>();
             foreach (AFEventFrame EF in eventFrames)
             {
-                // To Do add cases in case the value is very bad
                 trends.Add(sensor.Data.InterpolatedValues(EF.TimeRange, interval, null, "", true));
             }
             List<AFValues> slices = GetSlices(trends);
@@ -131,6 +132,7 @@ namespace EventFrameAnalysis
 
         internal void WriteValues(AFTime startTime)
         {
+            logger.Info($"Writing data with {startTime}");
             AFValue nodataValue = new AFValue(nodata);
             foreach (KeyValuePair<AFAttributeTrait, AFValues> boundPair in bounds)
             {

@@ -34,6 +34,8 @@ namespace EventFrameAnalysis
         static AFDatabase afdatabase;
         static List<LimitCalculation> calculations;
 
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public static void WaitForQuit()
         {
             do
@@ -42,8 +44,14 @@ namespace EventFrameAnalysis
             } while (Console.ReadLine() != "Q");
         }
 
+
         static void Main(string[] args)
         {
+            //ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+            //XmlConfigurator.Configure();
+            logger.Info("The application has started.");
+
             afdatabase = new PISystems().DefaultPISystem.Databases[Properties.Settings.Default.AFDatabase];
             List<CalculationPreference> calculationPreferences;
 
@@ -51,7 +59,7 @@ namespace EventFrameAnalysis
             PISystem pisystem = afdatabase.PISystem;
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
-
+            logger.Info($"Will process {preferences.Count} preferences");
             foreach (AFElement preference in preferences)
             {
                 string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
@@ -81,12 +89,12 @@ namespace EventFrameAnalysis
 
         internal static void OnChanged(object sender, AFChangedEventArgs e)
         {
-            // Find changes since the last refresh
+            logger.Debug("Received a new event to process");
             List<AFChangeInfo> changes = new List<AFChangeInfo>();
             changes.AddRange(afdatabase.FindChangedItems(true, int.MaxValue, cookie, out cookie));
             AFChangeInfo.Refresh(afdatabase.PISystem, changes);
 
-            foreach (AFChangeInfo info in changes.FindAll(i => i.Identity == AFIdentity.EventFrame))
+            foreach (AFChangeInfo info in changes.FindAll(change => change.Identity == AFIdentity.EventFrame))
             {
                 AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabase.PISystem, true);
                 
