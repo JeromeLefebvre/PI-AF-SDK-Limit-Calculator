@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows.Forms;
 using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using OSIsoft.AF.Asset;
 using LimitCalculatorSDK;
-using System.Security.Principal;
-using System.Net;
 
 namespace Limit_Calculator
 {
@@ -53,12 +50,6 @@ namespace Limit_Calculator
                 });
                 vertical += 22;
             }
-        }
-
-        private void Main_Load(object sender, EventArgs e)
-        {
-            //queryTextBox.Text = @"Start:>*-10h End:<*-1h Inprogress:=False";
-            // TODO: Create the LimitCalculator Element if it does not exists 
         }
 
         private void afDatabasePicker_SelectionChange(object sender, OSIsoft.AF.UI.SelectionChangeEventArgs e)

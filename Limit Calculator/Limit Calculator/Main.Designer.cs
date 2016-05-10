@@ -211,7 +211,6 @@
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.Name = "Main";
             this.Text = "Limit Calculator";
-            this.Load += new System.EventHandler(this.Main_Load);
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).EndInit();
             this.ResumeLayout(false);
