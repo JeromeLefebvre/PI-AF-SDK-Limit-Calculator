@@ -21,19 +21,12 @@ using OSIsoft.AF;
 using OSIsoft.AF.EventFrame;
 using OSIsoft.AF.Asset;
 using LimitCalculatorSDK;
+using System.Threading.Tasks;
 
 namespace EventFrameAnalysis
 {
     class Program
     {
-        static Timer refreshTimer = new Timer(1000);
-        static object cookie;
-        static ElapsedEventHandler elapsedEH;
-        static EventHandler<AFChangedEventArgs> changedEH;
-
-        static AFDatabase afdatabase;
-        static List<LimitCalculation> calculations;
-
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static void WaitForQuit()
@@ -47,72 +40,30 @@ namespace EventFrameAnalysis
 
         static void Main(string[] args)
         {
-            //ILog logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-            //XmlConfigurator.Configure();
             logger.Info("The application has started.");
 
-            afdatabase = new PISystems().DefaultPISystem.Databases[Properties.Settings.Default.AFDatabase];
+            // Need to know the current PI Server name
+            PISystem pisystem = new PISystems().DefaultPISystem; //.Databases[Properties.Settings.Default.AFDatabase];
             List<CalculationPreference> calculationPreferences;
 
             calculationPreferences = new List<CalculationPreference> { };
-            PISystem pisystem = afdatabase.PISystem;
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
             logger.Info($"Will process {preferences.Count} preferences");
-            foreach (AFElement preference in preferences)
+            List<DatabaseMonitoring> monitoredDB = new List<DatabaseMonitoring> { };
+            Parallel.ForEach(preferences, (preference) =>
             {
                 string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
-                calculationPreferences.Add(CalculationPreference.CalculationPreferenceFromJSON(JSON));
-            }
-
-            calculations = calculationPreferences.ConvertAll(preference => new LimitCalculation(preference));
-
-            // Initialize the cookie (bookmark)
-            afdatabase.FindChangedItems(false, int.MaxValue, null, out cookie);
-
-            // Initialize the timer, used to refresh the database
-            elapsedEH = new System.Timers.ElapsedEventHandler(OnElapsed);
-            refreshTimer.Elapsed += elapsedEH;
-
-            // Set the function to be triggered once a change is detected
-            changedEH = new EventHandler<AFChangedEventArgs>(OnChanged);
-            afdatabase.Changed += changedEH;
-            refreshTimer.Start();
+                LimitCalculation calc = new LimitCalculation(CalculationPreference.CalculationPreferenceFromJSON(JSON));
+                monitoredDB.Add(new DatabaseMonitoring(calc));
+            });
 
             WaitForQuit();
-
-            afdatabase.Changed -= changedEH;
-            refreshTimer.Elapsed -= elapsedEH;
-            refreshTimer.Stop();
-        }
-
-        internal static void OnChanged(object sender, AFChangedEventArgs e)
-        {
-            logger.Debug("Received a new event to process");
-            List<AFChangeInfo> changes = new List<AFChangeInfo>();
-            changes.AddRange(afdatabase.FindChangedItems(true, int.MaxValue, cookie, out cookie));
-            AFChangeInfo.Refresh(afdatabase.PISystem, changes);
-
-            foreach (AFChangeInfo info in changes.FindAll(change => change.Identity == AFIdentity.EventFrame))
+            
+            foreach(DatabaseMonitoring db in monitoredDB)
             {
-                AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabase.PISystem, true);
-                
-                foreach (LimitCalculation calculation in calculations)
-                {
-                    calculation.performAction(lastestEventFrame, info.Action);
-                }
+                db.quit();
             }
-        }
-
-        internal static void OnElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // Refreshing Database will cause any external changes to be seen which will result in the triggering of the OnChanged event handler
-            lock (afdatabase)
-            {
-                afdatabase.Refresh();
-            }
-            refreshTimer.Start();
         }
     }
 }

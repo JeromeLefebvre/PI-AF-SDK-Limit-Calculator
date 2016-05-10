@@ -14,7 +14,7 @@ namespace EventFrameAnalysis
     class LimitCalculation
     {
         private PISystem pisystem;
-        private AFDatabase afdatabse;
+        public AFDatabase afdatabase;
         static readonly AFEnumerationValue nodata = (new PIServers().DefaultPIServer).StateSets["SYSTEM"]["NO Data"];
         static AFTimeSpan interval = new AFTimeSpan(seconds: 1);
 
@@ -35,13 +35,13 @@ namespace EventFrameAnalysis
 
             sensor = AFAttribute.FindAttribute(afattributepath, null);
             pisystem = sensor.PISystem;
-            afdatabse = sensor.Database;
+            afdatabase = sensor.Database;
             foreach (KeyValuePair<AFAttributeTrait, string> pair in calculationsToPerform)
             {
                 bounds[pair.Key] = new AFValues();
                 boundAttributes[pair.Key] = sensor.GetAttributeByTrait(pair.Key);
             }
-            eventFrameQuery = new AFEventFrameSearch(afdatabse, "eventFrameSearch", eventQuery);
+            eventFrameQuery = new AFEventFrameSearch(afdatabase, "eventFrameSearch", eventQuery);
             InitialRun();
         }
 
