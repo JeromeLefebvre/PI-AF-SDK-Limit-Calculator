@@ -15,10 +15,8 @@
 #endregion
 
 using System;
-using System.Timers;
 using System.Collections.Generic;
 using OSIsoft.AF;
-using OSIsoft.AF.EventFrame;
 using OSIsoft.AF.Asset;
 using LimitCalculatorSDK;
 using System.Threading.Tasks;
@@ -37,26 +35,21 @@ namespace EventFrameAnalysis
             } while (Console.ReadLine() != "Q");
         }
 
-
         static void Main(string[] args)
         {
             logger.Info("The application has started.");
 
-            // Need to know the current PI Server name
-            PISystem pisystem = new PISystems().DefaultPISystem; //.Databases[Properties.Settings.Default.AFDatabase];
-            List<CalculationPreference> calculationPreferences;
-
-            calculationPreferences = new List<CalculationPreference> { };
+            PISystem pisystem = new PISystems().DefaultPISystem; ;
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
             logger.Info($"Will process {preferences.Count} preferences");
             List<DatabaseMonitoring> monitoredDB = new List<DatabaseMonitoring> { };
             Parallel.ForEach(preferences, (preference) =>
-            {
-                string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
-                LimitCalculation calc = new LimitCalculation(CalculationPreference.CalculationPreferenceFromJSON(JSON));
-                monitoredDB.Add(new DatabaseMonitoring(calc));
-            });
+                {
+                    string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
+                    LimitCalculation calc = new LimitCalculation(CalculationPreference.CalculationPreferenceFromJSON(JSON));
+                    monitoredDB.Add(new DatabaseMonitoring(calc));
+                });
 
             WaitForQuit();
             
