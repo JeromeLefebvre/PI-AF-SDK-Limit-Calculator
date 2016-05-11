@@ -34,6 +34,7 @@ namespace EventFrameAnalysis
         static readonly AFEnumerationValue nodata = (new PIServers().DefaultPIServer).StateSets["SYSTEM"]["NO Data"];
         static AFTimeSpan interval = new AFTimeSpan(seconds: 1);
 
+        private CalculationPreference preference;
         private double offset;
         private readonly AFEventFrameSearch eventFrameQuery;
         private readonly AFAttribute sensor;
@@ -50,14 +51,19 @@ namespace EventFrameAnalysis
             string eventQuery = preference.eventFrameQuery;
             calculationsToPerform = preference.getTraitDictionary();
             offset = preference.offset;
-
+            this.preference = preference;
             sensor = AFAttribute.FindAttribute(afattributepath, null);
             pisystem = sensor.PISystem;
             afdatabase = sensor.Database;
             foreach (KeyValuePair<AFAttributeTrait, string> pair in calculationsToPerform)
             {
                 bounds[pair.Key] = new AFValues();
-                boundAttributes[pair.Key] = sensor.GetAttributeByTrait(pair.Key);
+                AFAttribute possibleAttribute = sensor.GetAttributeByTrait(pair.Key);
+                boundAttributes[pair.Key] = possibleAttribute;
+                if (possibleAttribute == null)
+                {
+                    logger.Error($"The limit {pair.Key} for attribute {preference.sensorPath} is not defined yet is used.");
+                }
             }
             eventFrameQuery = new AFEventFrameSearch(afdatabase, "eventFrameSearch", eventQuery);
             InitialRun();
@@ -66,7 +72,7 @@ namespace EventFrameAnalysis
         internal static bool timelessMatch(AFEventFrameSearch query, AFEventFrame ef)
         {
             List<AFSearchToken> tokens = query.Tokens.ToList();
-            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End);
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End || t.Filter == AFSearchFilter.Duration);
             AFEventFrameSearch timeless = new AFEventFrameSearch(query.Database, "AllEventFrames", tokens);
             return timeless.IsMatch(ef);
         }
@@ -74,7 +80,7 @@ namespace EventFrameAnalysis
         internal static AFEventFrameSearch currentEventFrame(AFEventFrameSearch query)
         {
             List<AFSearchToken> tokens = query.Tokens.ToList();
-            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.AllDescendants || t.Filter == AFSearchFilter.End);
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.AllDescendants || t.Filter == AFSearchFilter.End || t.Filter == AFSearchFilter.Duration);
             AFSearchToken inprogress = new AFSearchToken(AFSearchFilter.InProgress, AFSearchOperator.Equal, "True");
             tokens.Add(inprogress);
             return new AFEventFrameSearch(query.Database, "CurrentEventFrame", tokens);
@@ -160,8 +166,11 @@ namespace EventFrameAnalysis
             {
                 AFValues bound = boundPair.Value;
                 nodataValue.Timestamp = timeShift(bound, startTime);
-                boundAttributes[boundPair.Key].PIPoint.UpdateValues(bound, AFUpdateOption.Insert);
-                boundAttributes[boundPair.Key].PIPoint.UpdateValue(nodataValue, AFUpdateOption.Insert);
+                if (boundAttributes[boundPair.Key] != null)
+                {
+                    boundAttributes[boundPair.Key].PIPoint.UpdateValues(bound, AFUpdateOption.Insert);
+                    boundAttributes[boundPair.Key].PIPoint.UpdateValue(nodataValue, AFUpdateOption.Insert);
+                }
             }
         }
 
