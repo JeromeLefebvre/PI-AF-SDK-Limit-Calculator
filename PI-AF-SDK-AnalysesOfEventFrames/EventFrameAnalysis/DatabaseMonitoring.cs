@@ -27,8 +27,6 @@ namespace EventFrameAnalysis
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private Timer refreshTimer = new Timer(1000);
         private object cookie;
-        private ElapsedEventHandler elapsedEH;
-        private EventHandler<AFChangedEventArgs> changedEH;
 
         private AFDatabase afdatabase;
         private LimitCalculation calculation;
@@ -41,26 +39,13 @@ namespace EventFrameAnalysis
             // Initialize the cookie (bookmark)
             afdatabase.FindChangedItems(false, int.MaxValue, null, out cookie);
 
-            // Initialize the timer, used to refresh the database
-            elapsedEH = new System.Timers.ElapsedEventHandler(OnElapsed);
-            refreshTimer.Elapsed += elapsedEH;
-
-            // Set the function to be triggered once a change is detected
-            changedEH = new EventHandler<AFChangedEventArgs>(OnChanged);
-            afdatabase.Changed += changedEH;
+            refreshTimer.Elapsed += new ElapsedEventHandler(OnElapsed);
+            afdatabase.Changed += new EventHandler<AFChangedEventArgs>(OnChanged);
             refreshTimer.Start();
-        }
-
-        public void quit()
-        {
-            afdatabase.Changed -= changedEH;
-            refreshTimer.Elapsed -= elapsedEH;
-            refreshTimer.Stop();
         }
 
         internal void OnChanged(object sender, AFChangedEventArgs e)
         {
-            logger.Debug("Received a new event to process");
             List<AFChangeInfo> changes = new List<AFChangeInfo>();
             changes.AddRange(afdatabase.FindChangedItems(true, int.MaxValue, cookie, out cookie));
             AFChangeInfo.Refresh(afdatabase.PISystem, changes);
@@ -68,6 +53,7 @@ namespace EventFrameAnalysis
             foreach (AFChangeInfo info in changes.FindAll(change => change.Identity == AFIdentity.EventFrame))
             {
                 AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabase.PISystem, true);
+                logger.Debug($"A new event to verify: {lastestEventFrame.Name}");
                 calculation.performAction(lastestEventFrame, info.Action);
             }
         }
@@ -77,6 +63,7 @@ namespace EventFrameAnalysis
             // Refreshing Database will cause any external changes to be seen which will result in the triggering of the OnChanged event handler
             lock (afdatabase)
             {
+                // possible to hit  a timeout here
                 afdatabase.Refresh();
             }
             refreshTimer.Start();

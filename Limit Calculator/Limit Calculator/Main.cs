@@ -15,7 +15,9 @@ namespace Limit_Calculator
                                                                     "μ - 3σ",
                                                                     "μ - 2σ",
                                                                     "μ - σ",
+                                                                    "μ - offset",
                                                                     "μ",
+                                                                    "μ + offset",
                                                                     "μ + σ",
                                                                     "μ + 2σ",
                                                                     "μ + 3σ",
@@ -67,6 +69,7 @@ namespace Limit_Calculator
             AFTreeNode node = (AFTreeNode)afTreeView.SelectedNode;
             string path = node.AFPath;
             string query = queryTextBox.Text;
+            double offset = Convert.ToDouble(offsetSetting.Text);
             Dictionary<string, string> limits = new Dictionary<string, string> { };
 
             foreach (AFAttributeTrait limit in AFAttributeTrait.AllLimits)
@@ -77,7 +80,7 @@ namespace Limit_Calculator
                     limits[limit.Name] = comboBox.Text;
                 }
             }
-            CalculationPreference preference = new CalculationPreference(path, query, limits);
+            CalculationPreference preference = new CalculationPreference(path, query, offset, limits);
 
             AFElement preferenceRoot = ((AFElement)configurationTreeView.AFRoot);
             AFElement newCalculation = new AFElement(calculationName.Text);
@@ -165,6 +168,7 @@ namespace Limit_Calculator
                     ComboBox comboBox = (ComboBox)panel1.Controls[pair.Key.Name];
                     comboBox.Text = pair.Value;
                 }
+                offsetSetting.Text = preference.offset.ToString();
                 AFAttribute sensor = AFAttribute.FindAttribute(preference.sensorPath, db);
                 afDatabasePicker.AFDatabase = sensor.Database;
                 afTreeView.AFRoot = sensor.Database.Elements;

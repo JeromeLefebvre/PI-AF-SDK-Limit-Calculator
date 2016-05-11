@@ -26,13 +26,15 @@ namespace LimitCalculatorSDK
     {
         public string sensorPath { get; set; }
         public string eventFrameQuery { get; set; }
+        public double offset { get; set; }
         public Dictionary<string, string> calculationsToPerform = new Dictionary<string, string> { };
         private static Dictionary<string, AFAttributeTrait> reverse = AFAttributeTrait.AllLimits.ToDictionary(p => p.Name, p => p);
 
-        public CalculationPreference(string sensorPath, string eventFrameQuery, Dictionary<string, string> calculationsToPerform)
+        public CalculationPreference(string sensorPath, string eventFrameQuery, double offset, Dictionary<string, string> calculationsToPerform)
         {
             this.sensorPath = sensorPath;
             this.eventFrameQuery = eventFrameQuery;
+            this.offset = offset;
             this.calculationsToPerform = calculationsToPerform;
         }
 

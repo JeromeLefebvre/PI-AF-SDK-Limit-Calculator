@@ -34,6 +34,7 @@ namespace EventFrameAnalysis
         static readonly AFEnumerationValue nodata = (new PIServers().DefaultPIServer).StateSets["SYSTEM"]["NO Data"];
         static AFTimeSpan interval = new AFTimeSpan(seconds: 1);
 
+        private double offset;
         private readonly AFEventFrameSearch eventFrameQuery;
         private readonly AFAttribute sensor;
         private Dictionary<AFAttributeTrait, AFValues> bounds = new Dictionary<AFAttributeTrait, AFValues> { };
@@ -48,6 +49,7 @@ namespace EventFrameAnalysis
             string afattributepath = preference.sensorPath;
             string eventQuery = preference.eventFrameQuery;
             calculationsToPerform = preference.getTraitDictionary();
+            offset = preference.offset;
 
             sensor = AFAttribute.FindAttribute(afattributepath, null);
             pisystem = sensor.PISystem;
@@ -96,6 +98,10 @@ namespace EventFrameAnalysis
                     return new AFValue(mean + 2 * stddev, time);
                 case "μ - 2σ":
                     return new AFValue(mean - 2 * stddev, time);
+                case "μ + offset":
+                    return new AFValue(mean + offset);
+                case "μ - offset":
+                    return new AFValue(mean - offset);
                 case "μ + σ":
                     return new AFValue(mean + stddev, time);
                 case "μ - σ":
@@ -107,7 +113,7 @@ namespace EventFrameAnalysis
                 case "Minimum":
                     return new AFValue(minimum, time);
             }
-            // this should throw an exception
+            logger.Error($"The specified calculation: {calculationName} method is unknown");
             return null;
         }
 

@@ -53,12 +53,6 @@ namespace EventFrameAnalysis
                 });
 
             WaitForQuit();
-            
-            /*
-            foreach(DatabaseMonitoring db in monitoredDB)
-            {
-                db.quit();
-            }*/
         }
     }
 }

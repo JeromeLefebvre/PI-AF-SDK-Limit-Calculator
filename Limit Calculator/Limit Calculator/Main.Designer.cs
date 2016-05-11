@@ -43,6 +43,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.calculationName = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.offsetSetting = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -127,7 +129,7 @@
             // 
             // addToPreference
             // 
-            this.addToPreference.Location = new System.Drawing.Point(402, 371);
+            this.addToPreference.Location = new System.Drawing.Point(402, 406);
             this.addToPreference.Name = "addToPreference";
             this.addToPreference.Size = new System.Drawing.Size(104, 23);
             this.addToPreference.TabIndex = 7;
@@ -137,7 +139,7 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(402, 178);
+            this.panel1.Location = new System.Drawing.Point(402, 169);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(282, 187);
             this.panel1.TabIndex = 25;
@@ -185,17 +187,36 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(400, 163);
+            this.label3.Location = new System.Drawing.Point(400, 154);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(327, 12);
             this.label3.TabIndex = 31;
             this.label3.Text = "Select the calculations that need to be perform for each slices";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(402, 373);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(39, 12);
+            this.label4.TabIndex = 32;
+            this.label4.Text = "Offset:";
+            // 
+            // offsetSetting
+            // 
+            this.offsetSetting.Location = new System.Drawing.Point(447, 370);
+            this.offsetSetting.Name = "offsetSetting";
+            this.offsetSetting.Size = new System.Drawing.Size(100, 19);
+            this.offsetSetting.TabIndex = 33;
+            this.offsetSetting.Text = "0";
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 542);
+            this.Controls.Add(this.offsetSetting);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.calculationName);
             this.Controls.Add(this.label2);
@@ -234,6 +255,8 @@
         private System.Windows.Forms.TextBox calculationName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox offsetSetting;
     }
 }
 
