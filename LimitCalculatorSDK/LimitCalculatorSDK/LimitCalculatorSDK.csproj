@@ -42,6 +42,7 @@
       <HintPath>..\..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OSIsoft.AF.UI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6238be57836698e6, processorArchitecture=MSIL" />
     <Reference Include="OSIsoft.AFSDK, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6238be57836698e6, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalculationPreference.cs" />
+    <Compile Include="EFutilities.cs" />
     <Compile Include="LimitCalculation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

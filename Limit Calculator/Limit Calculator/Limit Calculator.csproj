@@ -83,6 +83,7 @@
     <Compile Include="EventFrameSearch.Designer.cs">
       <DependentUpon>EventFrameSearch.cs</DependentUpon>
     </Compile>
+    <Compile Include="EventFrameUtility.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
