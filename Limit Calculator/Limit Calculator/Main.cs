@@ -5,6 +5,7 @@ using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using OSIsoft.AF.Asset;
 using LimitCalculatorSDK;
+using System.Threading;
 
 namespace Limit_Calculator
 {
@@ -66,6 +67,11 @@ namespace Limit_Calculator
 
         private void addToPreference_Click(object sender, EventArgs e)
         {
+            if (calculationName.Text == "")
+            {
+                MessageBox.Show("Please specify the name of the calculation", "No Name specified", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             AFTreeNode node = (AFTreeNode)afTreeView.SelectedNode;
             string path = node.AFPath;
             string query = queryTextBox.Text;
@@ -83,17 +89,21 @@ namespace Limit_Calculator
             CalculationPreference preference = new CalculationPreference(path, query, offset, limits);
 
             AFElement preferenceRoot = ((AFElement)configurationTreeView.AFRoot);
-            AFElement newCalculation = new AFElement(calculationName.Text);
+            AFValue configurationValue = new AFValue(preference.JSON());
+            AFElement preferenceElement = preferenceRoot.Elements[calculationName.Text];
 
-            newCalculation.Attributes.Add("Configuration");
-            newCalculation.Attributes["Configuration"].Type = typeof(string);
-            newCalculation.Attributes["Configuration"].SetValue(new AFValue(preference.JSON()));
-            AFElement alreadyThere = preferenceRoot.Elements[calculationName.Text];
-            if (alreadyThere != null)
-                preferenceRoot.Elements.Remove(alreadyThere);
-            
-            preferenceRoot.Elements.Add(newCalculation);
-            preferenceRoot.CheckIn();
+            if (preferenceElement == null)
+            {
+                preferenceElement = new AFElement(calculationName.Text);
+                preferenceElement.Attributes.Add("Configuration");
+                preferenceElement.Attributes["Configuration"].Type = typeof(string);
+                preferenceRoot.Elements.Add(preferenceElement);
+                preferenceRoot.CheckIn();
+            }
+            preferenceElement.Attributes["Configuration"].SetValue(configurationValue);
+            preferenceElement.CheckIn();
+            configurationTreeView.Refresh();
+            configurationTreeView.AFSelect(preferenceElement, preferenceElement.Database, preferenceElement.GetPath());
         }
 
         private void displaySearch_Click(object sender, EventArgs e)
