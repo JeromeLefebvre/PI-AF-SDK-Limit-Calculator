@@ -96,7 +96,8 @@
             // 
             // queryTextBox
             // 
-            this.queryTextBox.Location = new System.Drawing.Point(402, 60);
+            this.queryTextBox.Enabled = false;
+            this.queryTextBox.Location = new System.Drawing.Point(404, 60);
             this.queryTextBox.Multiline = true;
             this.queryTextBox.Name = "queryTextBox";
             this.queryTextBox.Size = new System.Drawing.Size(379, 50);
@@ -105,7 +106,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(400, 40);
+            this.label1.Location = new System.Drawing.Point(402, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(106, 12);
             this.label1.TabIndex = 3;
@@ -152,9 +153,9 @@
             // 
             this.displaySearch.Location = new System.Drawing.Point(402, 116);
             this.displaySearch.Name = "displaySearch";
-            this.displaySearch.Size = new System.Drawing.Size(75, 23);
+            this.displaySearch.Size = new System.Drawing.Size(121, 23);
             this.displaySearch.TabIndex = 27;
-            this.displaySearch.Text = "Search";
+            this.displaySearch.Text = "Event Frame Search";
             this.displaySearch.UseVisualStyleBackColor = true;
             this.displaySearch.Click += new System.EventHandler(this.displaySearch_Click);
             // 
@@ -243,7 +244,6 @@
 
         private OSIsoft.AF.UI.PISystemPicker piSystemPicker;
         private OSIsoft.AF.UI.AFDatabasePicker afDatabasePicker;
-        private System.Windows.Forms.TextBox queryTextBox;
         private System.Windows.Forms.Label label1;
         private OSIsoft.AF.UI.AFTreeView afTreeView;
         private System.Windows.Forms.Button addToPreference;
@@ -257,6 +257,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox offsetSetting;
+        private System.Windows.Forms.TextBox queryTextBox;
     }
 }
 

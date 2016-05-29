@@ -45,6 +45,7 @@
             this.eventFrameSearchPage.Size = new System.Drawing.Size(1163, 721);
             this.eventFrameSearchPage.TabIndex = 0;
             this.eventFrameSearchPage.SearchCompleted += new OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage.SearchCompletedHandler(this.eventFrameSearchPage_SearchCompleted);
+            this.eventFrameSearchPage.Load += new System.EventHandler(this.eventFrameSearchPage_Load);
             // 
             // EventFrameSearch
             // 
@@ -59,6 +60,7 @@
             this.Load += new System.EventHandler(this.EventFrameSearch_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

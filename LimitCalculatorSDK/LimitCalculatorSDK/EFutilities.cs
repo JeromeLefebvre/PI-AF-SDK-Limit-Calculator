@@ -1,24 +1,47 @@
 ﻿using OSIsoft.AF.UI;
+using OSIsoft.AF;
+using OSIsoft.AF.Asset;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OSIsoft.AF.EventFrame;
+using System.IO;
+using OSIsoft.AF.Time;
 
 namespace LimitCalculatorSDK
 {
-    class EFutilities
+    public class EFutilities
     {
-        static AFEventFrameCriteria queryToCriteria(OSIsoft.AF.Search.AFEventFrameSearch query)
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        public static AFEventFrameCriteria queryToCriteria(OSIsoft.AF.Search.AFEventFrameSearch query)
         {
             AFEventFrameCriteria criteria = new AFEventFrameCriteria();
-            //OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", queryText);
 
-            OSIsoft.AF.Search.AFSearchToken starttime = new OSIsoft.AF.Search.AFSearchToken();
-            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, out starttime);
-            if (starttime.Value != null)
-                criteria.StartTime = starttime.Value;
-            query.Tokens.Remove(starttime);
+            IList<OSIsoft.AF.Search.AFSearchToken> starttimes;
+            query.TryFindSearchTokens(OSIsoft.AF.Search.AFSearchFilter.Start, out starttimes);
+
+            if (starttimes.Count == 2)
+            {
+                criteria.SearchMode = AFSearchMode.StartInclusive;
+                AFTime start = new AFTime(starttimes[0].Value);
+                AFTime end = new AFTime(starttimes[1].Value);
+                if (start < end)
+                {
+                    criteria.StartTime = starttimes[0].Value;
+                    criteria.EndTime = starttimes[1].Value;
+                }
+                else
+                {
+                    criteria.StartTime = starttimes[1].Value;
+                    criteria.EndTime = starttimes[0].Value;
+                }
+            }
+            else if (starttimes.Count == 1) {
+                criteria.StartTime = starttimes[0].Value;
+            }
 
             OSIsoft.AF.Search.AFSearchToken endtime = new OSIsoft.AF.Search.AFSearchToken();
             query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.End, out endtime);
@@ -33,11 +56,6 @@ namespace LimitCalculatorSDK
             query.Tokens.Remove(inprogress);
 
 
-            // Pick the search mode
-            if (starttime != null && endtime != null)
-            {
-
-            }
 
             /*
             //
@@ -73,17 +91,29 @@ namespace LimitCalculatorSDK
             criteria.LastFullSearchString = query.ToString();
             return criteria;
         }
-        static OSIsoft.AF.Search.AFEventFrameSearch criteriaToQuery(AFEventFrameCriteria criteria)
+        public static OSIsoft.AF.Search.AFEventFrameSearch criteriaToQuery(AFEventFrameCriteria criteria)
         {
+            OSIsoft.AF.Search.AFSearchFilter startFilter = OSIsoft.AF.Search.AFSearchFilter.Start;
+            OSIsoft.AF.Search.AFSearchOperator ge = OSIsoft.AF.Search.AFSearchOperator.GreaterThanOrEqual;
+            OSIsoft.AF.Search.AFSearchOperator le = OSIsoft.AF.Search.AFSearchOperator.LessThanOrEqual;
+            OSIsoft.AF.Search.AFSearchToken start;
+            OSIsoft.AF.Search.AFSearchToken startGE = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, ge, "*");
             OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(criteria.Database, "search", criteria.LastFullSearchString);
-            OSIsoft.AF.Search.AFSearchToken startTime = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, OSIsoft.AF.Search.AFSearchOperator.GreaterThanOrEqual, criteria.StartTime);
+            OSIsoft.AF.Search.AFSearchToken startTime;
             OSIsoft.AF.Search.AFSearchToken endTime = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.End, OSIsoft.AF.Search.AFSearchOperator.LessThanOrEqual, criteria.EndTime);
             OSIsoft.AF.Search.AFSearchToken inProgess = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.InProgress, OSIsoft.AF.Search.AFSearchOperator.Equal, criteria.InProgress.ToString());
 
-            query.Tokens.Add(startTime);
-            query.Tokens.Add(endTime);
+            if (criteria.SearchMode == AFSearchMode.StartInclusive)
+            {
+                start = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, le, criteria.StartTime);
+                query.Tokens.Add(start);
+                start = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, le, criteria.EndTime);
+                query.Tokens.Add(start);
+            }
+
             query.Tokens.Add(inProgess);
             return query;
         }
+
     }
 }
