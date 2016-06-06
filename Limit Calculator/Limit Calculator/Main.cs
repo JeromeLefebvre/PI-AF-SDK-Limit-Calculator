@@ -155,12 +155,15 @@ namespace Limit_Calculator
                 if (start.Operator == AFSearchOperator.LessThanOrEqual && end.Operator == AFSearchOperator.GreaterThanOrEqual)
                 {
                     criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.ActiveBetween;
+                    criteria.StartTime = end.Value;
+                    criteria.EndTime = start.Value;
                 }
                 else if (start.Operator == AFSearchOperator.GreaterThanOrEqual && end.Operator == AFSearchOperator.LessThanOrEqual)
                 {
                     criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.EntirelyBetween;
+                    criteria.StartTime = start.Value;
+                    criteria.EndTime = end.Value;
                 }
-                criteria.StartTime = start.Value;
             }
             else if (starts.Count == 1)
             {

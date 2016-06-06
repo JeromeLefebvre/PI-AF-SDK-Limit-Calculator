@@ -52,9 +52,11 @@ namespace EventFrameAnalysis
 
             foreach (AFChangeInfo info in changes.FindAll(change => change.Identity == AFIdentity.EventFrame))
             {
-                AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabase.PISystem, true);
-                logger.Debug($"A new event to verify: {lastestEventFrame.Name}");
-                calculation.performAction(lastestEventFrame, info.Action);
+                if (info.Action != AFChangeInfoAction.Removed) { 
+                    AFEventFrame lastestEventFrame = (AFEventFrame)info.FindObject(afdatabase.PISystem, true);
+                    logger.Debug($"A new event to verify: {lastestEventFrame.Name}");
+                    calculation.performAction(lastestEventFrame, info.Action);
+                }
             }
         }
 
