@@ -5,6 +5,9 @@ using OSIsoft.AF;
 using OSIsoft.AF.UI;
 using OSIsoft.AF.Asset;
 using LimitCalculatorSDK;
+using OSIsoft.AF.Search;
+using System.Linq;
+using OSIsoft.AF.Time;
 
 namespace Limit_Calculator
 {
@@ -111,16 +114,96 @@ namespace Limit_Calculator
 
         private void displaySearch_Click(object sender, EventArgs e)
         {
-            refreshSearchWindow();
+            h = new EventFrameSearch(this, db);
+            search = (OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage)h.Controls["eventFrameSearchPage"];
+            //search.EventFrameCriteria.RestoreCriteria(calculationName.Text);
+            //search.EventFrameCriteria.LastFullSearchString = queryTextBox.Text;*/
+            search.CriteriaInitiallyOpened = true;
+            OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(db, "search", queryTextBox.Text);
+            //OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage search = (OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage)h.Controls["eventFrameSearchPage"];
+            AFEventFrameCriteria criteria = queryToCriteria(query);
+            search.EventFrameCriteria = criteria;
+            //refreshSearchWindow();
             h.Show();
+        }
+
+        static AFEventFrameCriteria queryToCriteria(OSIsoft.AF.Search.AFEventFrameSearch query)
+        {
+            AFEventFrameCriteria criteria = new AFEventFrameCriteria();
+            criteria.Database = query.Database;
+            IList<AFSearchToken> starts;
+            query.TryFindSearchTokens(OSIsoft.AF.Search.AFSearchFilter.Start, out starts);
+            IList<AFSearchToken> ends;
+            query.TryFindSearchTokens(OSIsoft.AF.Search.AFSearchFilter.End, out ends);
+            
+            if (ends.Count == 2)
+            {
+                criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.EndingBetween;
+                criteria.StartTime = ends[0].Value;
+                criteria.EndTime = ends[1].Value;
+            }
+            else if (starts.Count == 2)
+            {
+                criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.StartingBetween;
+                criteria.StartTime = starts[0].Value;
+                criteria.EndTime = starts[1].Value;
+            }
+            else if (starts.Count == 1 && ends.Count == 1)
+            {
+                AFSearchToken start = starts[0];
+                AFSearchToken end = ends[0];
+                if (start.Operator == AFSearchOperator.LessThanOrEqual && end.Operator == AFSearchOperator.GreaterThanOrEqual)
+                {
+                    criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.ActiveBetween;
+                }
+                else if (start.Operator == AFSearchOperator.GreaterThanOrEqual && end.Operator == AFSearchOperator.LessThanOrEqual)
+                {
+                    criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.EntirelyBetween;
+                }
+                criteria.StartTime = start.Value;
+            }
+            else if (starts.Count == 1)
+            {
+                AFSearchToken start = starts[0];
+                if (start.Operator == AFSearchOperator.GreaterThanOrEqual)
+                {
+                    criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.StartingAfter;
+                }
+                else
+                {
+                    criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.StartingBefore;
+                }
+                criteria.AFStartTimeString = start.Value;
+            }
+            else if (ends.Count == 1)
+            {
+                AFSearchToken end = ends[0];
+                if (end.Operator == AFSearchOperator.GreaterThanOrEqual)
+                {
+                    criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.EndingAfter;
+                }
+                else
+                {
+                    criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.EndingBefore;
+                }
+                criteria.AFStartTimeString = end.Value;
+            }
+
+            criteria.LastFullSearchString = timelessQuery(query);
+            return criteria;
+        }
+
+        internal static string timelessQuery(OSIsoft.AF.Search.AFEventFrameSearch query)
+        {
+            List<AFSearchToken> tokens = query.Tokens.ToList();
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End);
+            OSIsoft.AF.Search.AFEventFrameSearch timeless = new OSIsoft.AF.Search.AFEventFrameSearch(query.Database, "TimeLess", tokens);
+            return timeless.ToString();
         }
 
         private void refreshSearchWindow()
         {
             h = new EventFrameSearch(this, db);
-            search = (OSIsoft.AF.UI.PropertyPage.EventFrameSearchPage)h.Controls["eventFrameSearchPage"];
-            search.EventFrameCriteria.RestoreCriteria(calculationName.Text);
-            search.EventFrameCriteria.LastFullSearchString = queryTextBox.Text;
             search.CriteriaInitiallyOpened = true;
         }
 
