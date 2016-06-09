@@ -96,12 +96,12 @@
             // 
             // queryTextBox
             // 
-            this.queryTextBox.Enabled = false;
             this.queryTextBox.Location = new System.Drawing.Point(404, 60);
             this.queryTextBox.Multiline = true;
             this.queryTextBox.Name = "queryTextBox";
             this.queryTextBox.Size = new System.Drawing.Size(379, 50);
             this.queryTextBox.TabIndex = 2;
+            this.queryTextBox.TextChanged += new System.EventHandler(this.queryTextBox_TextChanged);
             // 
             // label1
             // 

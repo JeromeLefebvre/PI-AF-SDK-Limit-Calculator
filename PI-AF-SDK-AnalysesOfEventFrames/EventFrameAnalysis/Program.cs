@@ -39,7 +39,9 @@ namespace EventFrameAnalysis
         {
             logger.Info("The application has started.");
 
-            PISystem pisystem = new PISystems().DefaultPISystem; ;
+            PISystem pisystem = new PISystems().DefaultPISystem;
+            pisystem.Connect();
+            logger.Info($"Connecting as: {pisystem.CurrentUserIdentityString}");
             AFDatabase configuration = pisystem.Databases["Configuration"];
             AFElements preferences = configuration.Elements["LimitCalculator"].Elements;
             logger.Info($"Will process {preferences.Count} preferences");
@@ -48,7 +50,8 @@ namespace EventFrameAnalysis
             Parallel.ForEach(preferences, (preference) =>
                 {
                     string JSON = (string)preference.Attributes["configuration"].GetValue().Value;
-                    LimitCalculation calc = new LimitCalculation(CalculationPreference.CalculationPreferenceFromJSON(JSON));
+                    logger.Info($"Configuration for preference: {JSON}");
+                    LimitCalculation calc = new LimitCalculation(CalculationPreference.CalculationPreferenceFromJSON(JSON), preference.Name);
                     monitoredDB.Add(new DatabaseMonitoring(calc));
                 });
 

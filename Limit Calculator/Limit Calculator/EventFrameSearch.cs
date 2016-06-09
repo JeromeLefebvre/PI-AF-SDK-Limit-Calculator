@@ -125,11 +125,17 @@ namespace Limit_Calculator
             AFNamedCollection<AFEventFrame> UIFrames = page.EventFrames;
             
             IEnumerable<AFEventFrame> AFSDKframes = criteria.FindEventFrames();
-
-            int count = AFSDKframes.Count() > 1000 ? 1000 : AFSDKframes.Count();
-            if (UIFrames.Count != count)
-                MessageBox.Show("They UI and AFKSDK frames report different variables", "Count error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            
+            try
+            {
+                int count = AFSDKframes.Count() > 1000 ? 1000 : AFSDKframes.Count();
+                if (UIFrames.Count != count)
+                    MessageBox.Show("They UI and AFKSDK frames report different variables", "Count error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            catch (System.FormatException e)
+            {
+                // Bad event frame search formatting for AFSDK UI.
+                MessageBox.Show(e.Message);
+            }
             return criteria;
         }
 

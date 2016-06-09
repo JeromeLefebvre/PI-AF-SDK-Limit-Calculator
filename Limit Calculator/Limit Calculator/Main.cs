@@ -78,6 +78,11 @@ namespace Limit_Calculator
             }
             AFTreeNode node = (AFTreeNode)afTreeView.SelectedNode;
             string path = node.AFPath;
+            if (path == "" || path == null)
+            {
+                MessageBox.Show("Please select a attribute", "No attribute specified", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
             string query = queryTextBox.Text;
             double offset = Convert.ToDouble(offsetSetting.Text);
             Dictionary<string, string> limits = new Dictionary<string, string> { };
@@ -108,7 +113,6 @@ namespace Limit_Calculator
             preferenceElement.CheckIn();
             configurationTreeView.Refresh();
             configurationTreeView.AFSelect(preferenceElement, preferenceElement.Database, preferenceElement.GetPath());
-            search.EventFrameCriteria.SaveCriteria(calculationName.Text);
         }
 
 
@@ -135,7 +139,30 @@ namespace Limit_Calculator
             query.TryFindSearchTokens(OSIsoft.AF.Search.AFSearchFilter.Start, out starts);
             IList<AFSearchToken> ends;
             query.TryFindSearchTokens(OSIsoft.AF.Search.AFSearchFilter.End, out ends);
-            
+            AFSearchToken templatename;
+            query.TryFindSearchToken(OSIsoft.AF.Search.AFSearchFilter.Template, out templatename);
+            IList<AFSearchToken> values;
+            query.TryFindSearchTokens(OSIsoft.AF.Search.AFSearchFilter.Value, out values);
+
+            if (values.Count != 0)
+            {
+                AFAttributeValueQuery[] queries = new AFAttributeValueQuery[values.Count];
+                criteria.AttributeValueQueries = new AFAttributeValueQuery[values.Count];
+                criteria.TemplateName = templatename.Value;
+                for (int i = 0; i < values.Count; i++)
+                {
+                    AFSearchToken value = values[i];
+                    string attributeName = value.Path.TrimStart(new char[] { '|' });
+                    AFElementTemplate template = query.Database.ElementTemplates[templatename.Value];
+                    AFAttributeTemplate templateAttribute = template.AttributeTemplates[attributeName];
+                    queries[i] = new AFAttributeValueQuery(templateAttribute, value.Operator, value.Value, templateAttribute.DefaultUOM);
+                    criteria.AttributeValueQueries[i] = new AFAttributeValueQuery(templateAttribute, value.Operator, value.Value, templateAttribute.DefaultUOM);
+                }
+
+                //criteria.AttributeValueQueries = queries;
+                //criteria.ValueQueryString = value.ToString();
+                //criteria.
+            }
             if (ends.Count == 2)
             {
                 criteria.SearchType = OSIsoft.AF.UI.Search.AFBaseEventFrameCriteria.EventFrameSearchType.EndingBetween;
@@ -192,14 +219,14 @@ namespace Limit_Calculator
                 criteria.AFStartTimeString = end.Value;
             }
 
-            criteria.LastFullSearchString = timelessQuery(query);
+            criteria.LastFullSearchString = stripTokens(query);
             return criteria;
         }
 
-        internal static string timelessQuery(OSIsoft.AF.Search.AFEventFrameSearch query)
+        internal static string stripTokens(OSIsoft.AF.Search.AFEventFrameSearch query)
         {
             List<AFSearchToken> tokens = query.Tokens.ToList();
-            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End);
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.End || t.Filter == AFSearchFilter.Value);
             OSIsoft.AF.Search.AFEventFrameSearch timeless = new OSIsoft.AF.Search.AFEventFrameSearch(query.Database, "TimeLess", tokens);
             return timeless.ToString();
         }
@@ -256,12 +283,19 @@ namespace Limit_Calculator
                 afTreeView.AFRoot = sensor.Database.Elements;
 
                 afTreeView.AFSelect(sensor, db, preference.sensorPath);
+                afTreeView.SelectedNode.EnsureVisible();
+                afTreeView.Focus();
             }
         }
 
         private void piSystemPicker_ConnectionChange(object sender, SelectionChangeEventArgs e)
         {
             updatePreferenceTree();
+        }
+
+        private void queryTextBox_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

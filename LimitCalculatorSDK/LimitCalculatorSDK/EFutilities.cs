@@ -1,20 +1,13 @@
 ﻿using OSIsoft.AF.UI;
-using OSIsoft.AF;
 using OSIsoft.AF.Asset;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OSIsoft.AF.EventFrame;
-using System.IO;
 using OSIsoft.AF.Time;
 
 namespace LimitCalculatorSDK
 {
     public class EFutilities
     {
-        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public static AFEventFrameCriteria queryToCriteria(OSIsoft.AF.Search.AFEventFrameSearch query)
         {
@@ -93,13 +86,11 @@ namespace LimitCalculatorSDK
         }
         public static OSIsoft.AF.Search.AFEventFrameSearch criteriaToQuery(AFEventFrameCriteria criteria)
         {
-            OSIsoft.AF.Search.AFSearchFilter startFilter = OSIsoft.AF.Search.AFSearchFilter.Start;
             OSIsoft.AF.Search.AFSearchOperator ge = OSIsoft.AF.Search.AFSearchOperator.GreaterThanOrEqual;
             OSIsoft.AF.Search.AFSearchOperator le = OSIsoft.AF.Search.AFSearchOperator.LessThanOrEqual;
             OSIsoft.AF.Search.AFSearchToken start;
             OSIsoft.AF.Search.AFSearchToken startGE = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.Start, ge, "*");
             OSIsoft.AF.Search.AFEventFrameSearch query = new OSIsoft.AF.Search.AFEventFrameSearch(criteria.Database, "search", criteria.LastFullSearchString);
-            OSIsoft.AF.Search.AFSearchToken startTime;
             OSIsoft.AF.Search.AFSearchToken endTime = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.End, OSIsoft.AF.Search.AFSearchOperator.LessThanOrEqual, criteria.EndTime);
             OSIsoft.AF.Search.AFSearchToken inProgess = new OSIsoft.AF.Search.AFSearchToken(OSIsoft.AF.Search.AFSearchFilter.InProgress, OSIsoft.AF.Search.AFSearchOperator.Equal, criteria.InProgress.ToString());
 
