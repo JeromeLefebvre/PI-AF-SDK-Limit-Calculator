@@ -128,6 +128,7 @@ namespace Limit_Calculator
             AFEventFrameCriteria criteria = queryToCriteria(query);
             search.EventFrameCriteria = criteria;
             //refreshSearchWindow();
+            // TODO, try and find the control that shows or doesn't show a certain value filter
             h.Show();
         }
 
@@ -286,6 +287,7 @@ namespace Limit_Calculator
                 afTreeView.SelectedNode.EnsureVisible();
                 afTreeView.Focus();
             }
+
         }
 
         private void piSystemPicker_ConnectionChange(object sender, SelectionChangeEventArgs e)
@@ -296,6 +298,34 @@ namespace Limit_Calculator
         private void queryTextBox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void afAttributesPage1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void afTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            AFTreeNode node = (AFTreeNode)afTreeView.SelectedNode;
+            string path = node.AFPath;
+            MessageBox.Show($"{node.AFObject.GetType()}");
+            if (path != "" && path != null)
+            {
+                try
+                {
+                    afAttributesPage1.AFAttribute = (AFAttribute)node.AFObject;
+                }
+                catch (InvalidCastException )
+                {
+                    // 属性では無かった
+                }
+            }
         }
     }
 }

@@ -37,6 +37,7 @@ namespace EventFrameAnalysis
         private CalculationPreference preference;
         private double offset;
         private readonly AFEventFrameSearch eventFrameQuery;
+        private AFEventFrameSearch currentFrameQuery;
         private readonly AFAttribute sensor;
         private Dictionary<AFAttributeTrait, AFValues> bounds = new Dictionary<AFAttributeTrait, AFValues> { };
         private Dictionary<AFAttributeTrait, AFAttribute> boundAttributes = new Dictionary<AFAttributeTrait, AFAttribute> { };
@@ -101,7 +102,7 @@ namespace EventFrameAnalysis
         internal static AFEventFrameSearch currentEventFrame(AFEventFrameSearch query)
         {
             List<AFSearchToken> tokens = query.Tokens.ToList();
-            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.AllDescendants || t.Filter == AFSearchFilter.End || t.Filter == AFSearchFilter.Duration);
+            tokens.RemoveAll(t => t.Filter == AFSearchFilter.InProgress || t.Filter == AFSearchFilter.AllDescendants || t.Filter == AFSearchFilter.End || t.Filter == AFSearchFilter.Start || t.Filter == AFSearchFilter.Duration);
             AFSearchToken inprogress = new AFSearchToken(AFSearchFilter.InProgress, AFSearchOperator.Equal, "True");
             tokens.Add(inprogress);
             return new AFEventFrameSearch(query.Database, "CurrentEventFrame", tokens);
@@ -112,11 +113,12 @@ namespace EventFrameAnalysis
             IDictionary<AFSummaryTypes, AFValue> statisticForSlice = GetStatistics(slice);
             AFTime time = statisticForSlice[AFSummaryTypes.Average].Timestamp;
             double mean = statisticForSlice[AFSummaryTypes.Average].ValueAsDouble();
-            double stddev = statisticForSlice[AFSummaryTypes.StdDev].ValueAsDouble();
-            double maximum = statisticForSlice[AFSummaryTypes.Maximum].ValueAsDouble();
-            double minimum = statisticForSlice[AFSummaryTypes.Minimum].ValueAsDouble();
+            //double stddev = statisticForSlice[AFSummaryTypes.StdDev].ValueAsDouble();
+            //double maximum = statisticForSlice[AFSummaryTypes.Maximum].ValueAsDouble();
+            //double minimum = statisticForSlice[AFSummaryTypes.Minimum].ValueAsDouble();
             switch (equation)
             {
+                /*
                 case "μ + 3σ":
                     return new AFValue(mean + 3 * stddev, time);
                 case "μ - 3σ":
@@ -132,13 +134,15 @@ namespace EventFrameAnalysis
                 case "μ + σ":
                     return new AFValue(mean + stddev, time);
                 case "μ - σ":
-                    return new AFValue(mean - stddev, time);
+                    return new AFValue(mean - stddev, time);*/
                 case "μ":
                     return new AFValue(mean, time);
+                /*
                 case "Maximum":
                     return new AFValue(maximum, time);
                 case "Minimum":
                     return new AFValue(minimum, time);
+                    */
             }
             logger.Error($"{calculationName} The specified calculation: {equation} method is unknown");
             return null;
@@ -146,10 +150,11 @@ namespace EventFrameAnalysis
 
         internal void InitialRun()
         {
+            currentFrameQuery = currentEventFrame(eventFrameQuery);
             ComputeStatistics();
-            AFEventFrameSearch currentEventFrameQuery = currentEventFrame(eventFrameQuery);
+            //AFEventFrameSearch currentEventFrameQuery = currentEventFrame(eventFrameQuery);
 
-            IEnumerable<AFEventFrame> currentEventFrames = currentEventFrameQuery.FindEventFrames(0, true, int.MaxValue);
+            IEnumerable<AFEventFrame> currentEventFrames = currentFrameQuery.FindEventFrames(0, true, int.MaxValue);
             try { 
                 foreach (AFEventFrame currentEventFrame in currentEventFrames)
                 {
@@ -225,8 +230,8 @@ namespace EventFrameAnalysis
             {
                 IDictionary<AFSummaryTypes, AFValue> dict = new Dictionary<AFSummaryTypes, AFValue>();
                 dict[AFSummaryTypes.Average] = values[0];
-                dict[AFSummaryTypes.Maximum] = values[0];
-                dict[AFSummaryTypes.Minimum] = values[0];
+                //dict[AFSummaryTypes.Maximum] = values[0];
+                //dict[AFSummaryTypes.Minimum] = values[0];
                 dict[AFSummaryTypes.StdDev] = new AFValue(0, values[0].Timestamp);
                 return dict;
             }

@@ -45,6 +45,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.offsetSetting = new System.Windows.Forms.TextBox();
+            this.afAttributesPage1 = new OSIsoft.AF.UI.PropertyPage.AFAttributesPage();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.calculationPreferenceBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -127,6 +129,7 @@
             this.afTreeView.ShowUOMs = true;
             this.afTreeView.Size = new System.Drawing.Size(372, 267);
             this.afTreeView.TabIndex = 6;
+            this.afTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.afTreeView_AfterSelect);
             // 
             // addToPreference
             // 
@@ -211,11 +214,37 @@
             this.offsetSetting.TabIndex = 33;
             this.offsetSetting.Text = "0";
             // 
+            // afAttributesPage1
+            // 
+            this.afAttributesPage1.BackColor = System.Drawing.Color.Transparent;
+            this.afAttributesPage1.HelpContext = ((long)(0));
+            this.afAttributesPage1.HelpFile = "PISystemExplorerUser.chm";
+            this.afAttributesPage1.HelpTopic = "GUID-388ED895-A84C-4F70-80A4-B779EC61CCE2.html";
+            this.afAttributesPage1.Location = new System.Drawing.Point(821, 60);
+            this.afAttributesPage1.Margin = new System.Windows.Forms.Padding(4);
+            this.afAttributesPage1.MinimumSize = new System.Drawing.Size(236, 231);
+            this.afAttributesPage1.Name = "afAttributesPage1";
+            this.afAttributesPage1.Size = new System.Drawing.Size(236, 270);
+            this.afAttributesPage1.TabIndex = 34;
+            this.afAttributesPage1.Load += new System.EventHandler(this.afAttributesPage1_Load);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(628, 392);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 35;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 542);
+            this.ClientSize = new System.Drawing.Size(1139, 542);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.afAttributesPage1);
             this.Controls.Add(this.offsetSetting);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -258,6 +287,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox offsetSetting;
         private System.Windows.Forms.TextBox queryTextBox;
+        private OSIsoft.AF.UI.PropertyPage.AFAttributesPage afAttributesPage1;
+        private System.Windows.Forms.Button button1;
     }
 }
 
